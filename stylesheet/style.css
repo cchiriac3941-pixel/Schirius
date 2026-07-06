@@ -1,0 +1,109 @@
+body{
+  background: linear-gradient(to bottom, black, midnightblue) !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+.navbar {
+  background-color: black !important;
+  border-bottom: 1px solid #cccccc !important;
+}
+
+.navbar-brand {
+    
+  color: white !important;
+  font-weight: bold;
+}
+
+.nav-link {
+  color: #cccccc !important;
+}
+
+.nav-link:hover {
+  color: white !important;
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}
+
+.navbar .btn.btn-outline-success {
+  transition: all 0.3s !important;
+  border-radius: 10px !important;
+  color: white !important;
+  border: none !important;
+}
+
+.navbar .btn.btn-outline-success:hover{
+  color: white !important;
+  padding: 0px 15px 0px 15px !important;
+  background-color: midnightblue !important;
+}
+
+.navbar .form-control.me-2{
+    border: none !important;
+    border-radius: 10px !important;
+    background-color: none !important;
+    transition: all 0.3s !important;
+    background-color: black !important;
+    border: 1px solid midnightblue !important;
+}
+
+.navbar .form-control.me-2:focus{
+    padding: 0px 15px 0px 15px !important;
+    background-color: black !important;
+    color: white !important;
+    border: none !important;
+    border: 1px solid midnightblue !important;
+}
+
+.navbar .form-control.me-2::placeholder{
+    color: #ffffff !important;
+}
+
+.navbar .form-control.me-2:hover{
+    padding: 0px 15px 0px 15px !important;
+    background-color: black !important;
+    color: white !important;
+    border: none !important;
+    border: 1px solid midnightblue !important;
+}
+
+.container {
+  border-radius: 10px !important;
+  padding: 20px !important;
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+/* Testo principale della sezione in evidenza e delle card */
+.container h1,
+.container h5,
+.container p {
+  color: white;
+}
+
+/* Sovrascrive text-muted di Bootstrap, che di default è grigio scuro */
+.container .text-muted {
+  color: #cccccc !important;
+}
+
+/* Le etichette "IN EVIDENZA", "NEWS", "VIDEO" */
+.container .text-uppercase {
+  color: #aaaaaa;
+}
+
+/* Le linee di separazione (border-top e border-start) sono quasi invisibili sullo scuro */
+.container .border-top,
+.container .border-start {
+  border-color: #555 !important;
+}
+
+
+.container a h1 {
+  color: white !important;
+
+}
+
+.row.align-items-center.mb-7 .col-md-3 img {
+  margin-bottom: 30px;
+}
