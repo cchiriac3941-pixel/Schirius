@@ -1,102 +1,115 @@
 <!DOCTYPE html>
 <html lang="it">
     <head>
-        <meta name="viewport"
-              content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Schirius Lyrics</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="stylesheet/style.css">
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Schirius</a>
+                <a class="navbar-brand fw-bold" href="#top">Schirius</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link active" aria-current="page" href="#top">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">In evidenza</a>
+                            <a class="nav-link" href="#featuredSection">In evidenza</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#albumsSection">Scopri</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Artisti
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item" href="#" data-artist="Lazza">Lazza</a></li>
+                                <li><a class="dropdown-item" href="#" data-artist="Sfera Ebbasta">Sfera Ebbasta</a></li>
+                                <li><a class="dropdown-item" href="#" data-artist="Shiva">Shiva</a></li>
+                                <li><a class="dropdown-item" href="#" data-artist="Capo Plaza">Capo Plaza</a></li>
+                                <li><a class="dropdown-item" href="#" data-artist="Travis Scott">Travis Scott</a></li>
+                                <li><a class="dropdown-item" href="#" data-artist="Drake">Drake</a></li>
+                                <li><a class="dropdown-item" href="#" data-artist="Artie 5ive">Artie 5ive</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Accedi/Registrati</a>
-                        </li>
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Cerca..." aria-label="Cerca"/>
-                        <button class="btn btn-outline-success" type="submit">Cerca</button>
+                    <form class="d-flex align-items-center" role="search" onsubmit="event.preventDefault(); handleSearch();">
+                        <input id="searchInput" class="form-control me-2" type="search" placeholder="Cerca artista, album..." aria-label="Cerca" />
+                        <button id="searchBtn" class="btn btn-outline-success" type="button">Cerca</button>
                     </form>
                 </div>
             </div>
         </nav>
 
-        <div class="container my-5">
+        <main id="top" class="main-content">
+          <section class="hero-section pt-5">
+            <div class="container py-5 text-white">
+              <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                  <span class="eyebrow">Scopri album e tracce</span>
+                  <h1 class="display-5 fw-bold">Catalogo di Lazza, Sfera Ebbasta, Shiva e molto altro</h1>
+                  <p class="lead text-white-75">Visualizza album e brani di Lazza, Sfera Ebbasta, Shiva, Capo Plaza, Travis Scott, Drake e Artie 5ive in una pagina moderna.</p>
+                  <div class="d-flex gap-2 flex-wrap mb-4" id="artistButtons">
+                    <button class="btn btn-primary btn-lg" type="button" onclick="handleSearch();">Cerca ora</button>
+                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Lazza">Lazza</button>
+                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Sfera Ebbasta">Sfera Ebbasta</button>
+                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Shiva">Shiva</button>
+                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Capo Plaza">Capo Plaza</button>
+                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Travis Scott">Travis Scott</button>
+                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Drake">Drake</button>
+                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Artie 5ive">Artie 5ive</button>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="hero-card glass p-4 shadow-lg">
+                    <p class="text-uppercase small fw-semibold text-accent">In evidenza</p>
+                    <h2 class="h3 mb-3">Latest album italiano</h2>
+                    <p class="text-muted">Seleziona un album tra i risultati per vedere la tracklist e ascoltare anteprime. L’interfaccia si adatta al tuo schermo.</p>
+                    <div class="d-flex gap-3 flex-wrap mt-4">
+                      <span class="badge rounded-pill bg-primary bg-opacity-80">Album</span>
+                      <span class="badge rounded-pill bg-secondary bg-opacity-80">Rap</span>
+                      <span class="badge rounded-pill bg-info bg-opacity-80">Anteprime</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
-  <!-- Sezione in evidenza -->
-  <div class="row align-items-center mb-7">
-    <div class="col-md-5">
-      <p class="text-uppercase small fw-bold border-top pt-2 mb-3">IN EVIDENZA</p>
-        <a href="pagine/re-mida.html" class="text-decoration-none anteprima-album">
-            <h1 class="fw-bold">RE MIDA</h1>
-        </a>
-      <p class="text-muted mt-3">Il secondo album pubblicato dal rapper italiano Lazza.</p>
-      <p class="small text-muted">by Lazza / 1 Mar, 2019</p>
-    </div>
-    <div class="col-md-3">
-      <img src="img/Re_Mida.jpg" class="img-fluid" alt="Copertina album">
-    </div>
-  </div>
+          <section id="featuredSection" class="container py-5">
+            <div class="section-header text-center mb-5">
+              <span class="eyebrow text-white-50">In evidenza</span>
+              <h2 class="text-white">Top album e singoli</h2>
+              <p class="text-white-50 mx-auto">I migliori contenuti dei tuoi artisti preferiti, selezionati automaticamente e aggiornati in tempo reale.</p>
+            </div>
 
-  <!-- Riga di card sotto -->
-  <div class="row">
-    <div class="col-md-3 border-start ps-3">
-      <p class="text-uppercase small fw-bold mb-2">Singolo</p>
-      <a href="pagine/swag-music.html" class="text-decoration-none anteprima-singolo">
-        <h5 class="fw-bold">Swag Music</h5>
-      </a>
-      <p class="small text-muted mb-2">by Artie 5ive / 15 Mag, 2026</p>
-      <img src="img/Swag_Music.jpg" class="img-fluid mt-3" alt="Copertina singolo">
-    </div>
-    <div class="col-md-3 border-start ps-3">
-      <p class="text-uppercase small fw-bold mb-2">Album</p>
-      <a href="pagine/santana-season.html" class="text-decoration-none anteprima-album">
-        <h5 class="fw-bold">Santana Season</h5>
-      </a>
-      <p class="small text-muted mb-2">by Shiva / 9 Giu, 2023</p>
-      <img src="img/Santana_Season.png" class="img-fluid mt-3" alt="Copertina album">
-    </div>
-    <div class="col-md-3 border-start ps-3">
-      <p class="text-uppercase small fw-bold mb-2">News</p>
-      <h5 class="fw-bold">Titolo canzone 3</h5>
-      <p class="small text-muted mb-2">by Autore / 6 Lug, 2026</p>
-      <img src="cover3.jpg" class="img-fluid mt-3" alt="">
-    </div>
-    <div class="col-md-3 border-start ps-3">
-      <p class="text-uppercase small fw-bold mb-2">News</p>
-      <h5 class="fw-bold">Titolo canzone 4</h5>
-      <p class="small text-muted mb-2">by Autore / 6 Lug, 2026</p>
-      <img src="cover4.jpg" class="img-fluid mt-3" alt="">
-    </div>
-  </div>
+            <div id="featuredMessage" class="alert alert-secondary text-center" role="status">Caricamento in evidenza...</div>
+            <div id="featuredGrid" class="row g-4"></div>
+          </section>
 
-</div>
+          <section id="albumsSection" class="container albums-section py-5">
+            <div class="section-header text-center mb-5">
+              <span class="eyebrow text-white-50">Discografie complete</span>
+              <h2 class="text-white">Cataloghi degli artisti</h2>
+              <p class="text-white-50 mx-auto">Visualizza le discografie ufficiali di Lazza, Sfera Ebbasta, Shiva, Capo Plaza, Travis Scott, Drake e Artie 5ive in un unico posto.</p>
+            </div>
 
+            <div id="albumsMessage" class="alert alert-secondary text-center" role="status">Caricamento delle discografie...</div>
+            <div id="albumsGrid" class="row g-4"></div>
+          </section>
+
+          <section id="tracksSection" class="container py-5 d-none"></section>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <script src="js/app.js" defer></script>
     </body>
 </html>
