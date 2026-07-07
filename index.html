@@ -12,38 +12,24 @@
         <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" href="#top">Schirius</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#top">Home</a>
+                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#featuredSection">In evidenza</a>
+                            <a class="nav-link" href="pages/featured.html">In evidenza</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#albumsSection">Scopri</a>
+                            <a class="nav-link" href="pages/discover.html">Scopri</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Artisti
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" data-artist="Lazza">Lazza</a></li>
-                                <li><a class="dropdown-item" href="#" data-artist="Sfera Ebbasta">Sfera Ebbasta</a></li>
-                                <li><a class="dropdown-item" href="#" data-artist="Shiva">Shiva</a></li>
-                                <li><a class="dropdown-item" href="#" data-artist="Capo Plaza">Capo Plaza</a></li>
-                                <li><a class="dropdown-item" href="#" data-artist="Travis Scott">Travis Scott</a></li>
-                                <li><a class="dropdown-item" href="#" data-artist="Drake">Drake</a></li>
-                                <li><a class="dropdown-item" href="#" data-artist="Artie 5ive">Artie 5ive</a></li>
-                            </ul>
+                        <li class="nav-item">
+                          <a class="nav-link" href="artists/index.html">Artisti</a>
                         </li>
                     </ul>
-                    <form class="d-flex align-items-center" role="search" onsubmit="event.preventDefault(); handleSearch();">
-                        <input id="searchInput" class="form-control me-2" type="search" placeholder="Cerca artista, album..." aria-label="Cerca" />
-                        <button id="searchBtn" class="btn btn-outline-success" type="button">Cerca</button>
+                    <form class="d-flex align-items-center search-input-group" role="search" onsubmit="event.preventDefault(); handleSearch();">
+                        <input id="searchInput" class="form-control" type="search" placeholder="Cerca artista, album..." aria-label="Cerca" />
+                        <button id="searchBtn" class="btn search-button-primary" type="button">⌕</button>
                     </form>
                 </div>
             </div>
@@ -52,62 +38,98 @@
         <main id="top" class="main-content">
           <section class="hero-section pt-5">
             <div class="container py-5 text-white">
-              <div class="row align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                  <span class="eyebrow">Scopri album e tracce</span>
-                  <h1 class="display-5 fw-bold">Catalogo di Lazza, Sfera Ebbasta, Shiva e molto altro</h1>
-                  <p class="lead text-white-75">Visualizza album e brani di Lazza, Sfera Ebbasta, Shiva, Capo Plaza, Travis Scott, Drake e Artie 5ive in una pagina moderna.</p>
-                  <div class="d-flex gap-2 flex-wrap mb-4" id="artistButtons">
-                    <button class="btn btn-primary btn-lg" type="button" onclick="handleSearch();">Cerca ora</button>
-                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Lazza">Lazza</button>
-                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Sfera Ebbasta">Sfera Ebbasta</button>
-                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Shiva">Shiva</button>
-                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Capo Plaza">Capo Plaza</button>
-                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Travis Scott">Travis Scott</button>
-                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Drake">Drake</button>
-                    <button class="btn btn-outline-light btn-lg" type="button" data-artist="Artie 5ive">Artie 5ive</button>
+              <div class="row justify-content-center">
+                <div class="col-lg-8">
+                  <div class="hero-card glass p-5 shadow-lg text-center">
+                    <p class="text-uppercase small fw-semibold text-accent">Ultima uscita</p>
+                    <h1 class="display-6 fw-bold mb-3">Prossimo aggiornamento artista</h1>
+                    <p class="lead text-white-75 mb-4">Qui sarà mostrata l’ultima uscita dell’artista selezionato. Inserisci il nome e i dettagli dell’album quando sei pronto.</p>
+                    <div class="release-card p-4 rounded-4 border border-white border-opacity-10">
+                      <h2 class="h4 mb-2" id="latestReleaseTitle">Titolo dell’uscita</h2>
+                      <p class="mb-1" id="latestReleaseArtist">Artista: <strong>Nome artista</strong></p>
+                      <p class="text-muted mb-3" id="latestReleaseDate">Data di pubblicazione: --/--/----</p>
+                      <p class="text-white-50 mb-0" id="latestReleaseDescription">Descrizione breve della nuova uscita, il singolo o l’album più recente.</p>
+                    </div>
                   </div>
                 </div>
-                <div class="col-lg-6">
-                  <div class="hero-card glass p-4 shadow-lg">
-                    <p class="text-uppercase small fw-semibold text-accent">In evidenza</p>
-                    <h2 class="h3 mb-3">Latest album italiano</h2>
-                    <p class="text-muted">Seleziona un album tra i risultati per vedere la tracklist e ascoltare anteprime. L’interfaccia si adatta al tuo schermo.</p>
-                    <div class="d-flex gap-3 flex-wrap mt-4">
-                      <span class="badge rounded-pill bg-primary bg-opacity-80">Album</span>
-                      <span class="badge rounded-pill bg-secondary bg-opacity-80">Rap</span>
-                      <span class="badge rounded-pill bg-info bg-opacity-80">Anteprime</span>
-                    </div>
+              </div>
+              <div class="row g-4 mt-4 justify-content-center">
+                <div class="col-sm-6 col-lg-3">
+                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
+                    <p class="eyebrow mb-2">Consigliato</p>
+                    <h3 class="h5 mb-2">Album 1</h3>
+                    <p class="text-white-50 mb-3">Artista / Genere</p>
+                    <span class="badge rounded-pill bg-primary bg-opacity-90">Nuovo</span>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
+                    <p class="eyebrow mb-2">Consigliato</p>
+                    <h3 class="h5 mb-2">Album 2</h3>
+                    <p class="text-white-50 mb-3">Artista / Genere</p>
+                    <span class="badge rounded-pill bg-secondary bg-opacity-90">Top</span>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
+                    <p class="eyebrow mb-2">Consigliato</p>
+                    <h3 class="h5 mb-2">Album 3</h3>
+                    <p class="text-white-50 mb-3">Artista / Genere</p>
+                    <span class="badge rounded-pill bg-info bg-opacity-90">Trend</span>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
+                    <p class="eyebrow mb-2">Consigliato</p>
+                    <h3 class="h5 mb-2">Album 4</h3>
+                    <p class="text-white-50 mb-3">Artista / Genere</p>
+                    <span class="badge rounded-pill bg-success bg-opacity-90">Scelto</span>
                   </div>
                 </div>
               </div>
             </div>
           </section>
-
-          <section id="featuredSection" class="container py-5">
-            <div class="section-header text-center mb-5">
-              <span class="eyebrow text-white-50">In evidenza</span>
-              <h2 class="text-white">Top album e singoli</h2>
-              <p class="text-white-50 mx-auto">I migliori contenuti dei tuoi artisti preferiti, selezionati automaticamente e aggiornati in tempo reale.</p>
-            </div>
-
-            <div id="featuredMessage" class="alert alert-secondary text-center" role="status">Caricamento in evidenza...</div>
-            <div id="featuredGrid" class="row g-4"></div>
-          </section>
-
-          <section id="albumsSection" class="container albums-section py-5">
-            <div class="section-header text-center mb-5">
-              <span class="eyebrow text-white-50">Discografie complete</span>
-              <h2 class="text-white">Cataloghi degli artisti</h2>
-              <p class="text-white-50 mx-auto">Visualizza le discografie ufficiali di Lazza, Sfera Ebbasta, Shiva, Capo Plaza, Travis Scott, Drake e Artie 5ive in un unico posto.</p>
-            </div>
-
-            <div id="albumsMessage" class="alert alert-secondary text-center" role="status">Caricamento delle discografie...</div>
-            <div id="albumsGrid" class="row g-4"></div>
-          </section>
-
-          <section id="tracksSection" class="container py-5 d-none"></section>
         </main>
+        <!-- Bottom navigation for small screens with central search -->
+        <nav class="bottom-nav" aria-label="Bottom navigation">
+          <div class="bottom-inner d-flex align-items-center">
+            <ul class="nav left-group me-2">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="label">Home</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pages/featured.html">
+                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="13" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg></span>
+                  <span class="label">In Evidenza</span>
+                </a>
+              </li>
+            </ul>
+
+            <div class="search-center">
+              <button id="mobileSearchBtn" class="search-button" aria-label="Cerca">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+
+            <ul class="nav right-group ms-2">
+              <li class="nav-item">
+                <a class="nav-link" href="pages/discover.html">
+                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5V6a1 1 0 0 1 1-1h14v14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 21V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="label">Scopri</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="artists/index.html">
+                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="label">Artisti</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         <script src="js/app.js" defer></script>
