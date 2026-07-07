@@ -80,8 +80,8 @@ body::before {
 .cursor-glow {
   position: fixed;
   pointer-events: none;
-  width: 400px;
-  height: 400px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   background: radial-gradient(circle, rgba(127, 196, 255, 0.22) 0%, rgba(127, 196, 255, 0.08) 25%, rgba(8, 19, 44, 0) 60%);
