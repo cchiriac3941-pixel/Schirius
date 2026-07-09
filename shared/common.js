@@ -1,3 +1,11 @@
+/* ============================================================
+   SCHIRIUS LYRICS — shared/common.js
+   Script CONDIVISO da tutte le pagine: glow della navbar, glow
+   del cursore, comportamento della bottom-nav mobile.
+   Va incluso PRIMA dello script specifico della pagina (che vive
+   nella cartella della pagina stessa).
+   ============================================================ */
+
 const navbar = document.querySelector('.navbar');
 
 function setupNavbarGlow() {

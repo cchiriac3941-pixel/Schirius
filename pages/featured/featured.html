@@ -5,21 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>In evidenza - Schirius</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="../stylesheet/style.css" />
+    <link rel="stylesheet" href="../../shared/base.css" />
+    <link rel="stylesheet" href="featured.css" />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
       <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="../index.html">Schirius</a>
+        <a class="navbar-brand fw-bold" href="../../index.html">Schirius</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
             <li class="nav-item"><a class="nav-link active" href="featured.html">In evidenza</a></li>
-            <li class="nav-item"><a class="nav-link" href="discover.html">Scopri</a></li>
-            <li class="nav-item"><a class="nav-link" href="../artists/artist.html">Artisti</a></li>
+            <li class="nav-item"><a class="nav-link" href="../discover/discover.html">Scopri</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../artists/artist.html">Artisti</a></li>
           </ul>
           <form class="d-flex align-items-center search-input-group" role="search" onsubmit="event.preventDefault(); handleSearch();">
             <input id="searchInput" class="form-control" type="search" placeholder="Cerca artista, album..." aria-label="Cerca" />
@@ -36,7 +37,7 @@
           <div class="latest-card glass p-5 shadow-lg rounded-3 position-relative overflow-hidden">
             <div class="row align-items-center">
               <div class="col-md-4 mb-4 mb-md-0">
-                <img src="../img/placeholder-album.jpg" alt="Album" class="img-fluid rounded-2 shadow-md" style="height: 250px; object-fit: cover; width: 100%;">
+                <img src="../../img/placeholder-album.jpg" alt="Album" class="img-fluid rounded-2 shadow-md" style="height: 250px; object-fit: cover; width: 100%;">
               </div>
               <div class="col-md-8 ps-md-4">
                 <span class="badge bg-primary mb-3">Nuova Uscita</span>
@@ -60,7 +61,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">1</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -76,7 +77,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">2</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -92,7 +93,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">3</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -108,7 +109,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">4</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -124,7 +125,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">5</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -140,7 +141,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">6</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -156,7 +157,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">7</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -172,7 +173,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">8</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -188,7 +189,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">9</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -204,7 +205,7 @@
               <div class="music-card glass p-4 rounded-2 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-radius: 50%; font-weight: bold;">10</div>
-                  <img src="../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                  <img src="../../img/placeholder-album-small.jpg" alt="Track" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <h5 class="mb-1"><a href="#" class="text-white text-decoration-none stretched-link">Song Title</a></h5>
                 <p class="text-white-50 small mb-3">Artist Name</p>
@@ -223,7 +224,7 @@
       <div class="bottom-inner d-flex align-items-center">
         <ul class="nav left-group me-2">
           <li class="nav-item">
-            <a class="nav-link" href="../index.html">
+            <a class="nav-link" href="../../index.html">
               <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="label">Home</span>
             </a>
@@ -244,13 +245,13 @@
 
         <ul class="nav right-group ms-2">
           <li class="nav-item">
-            <a class="nav-link" href="discover.html">
+            <a class="nav-link" href="../discover/discover.html">
               <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5V6a1 1 0 0 1 1-1h14v14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 21V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="label">Scopri</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../artists/artist.html">
+            <a class="nav-link" href="../../artists/artist.html">
               <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="label">Artisti</span>
             </a>
@@ -260,6 +261,7 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="../js/app.js" defer></script>
+    <script src="../../shared/common.js" defer></script>
+    <script src="featured.js" defer></script>
   </body>
 </html>

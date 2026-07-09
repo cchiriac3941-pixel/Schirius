@@ -1,9 +1,10 @@
 /* ============================================================
-   SCHIRIUS LYRICS — stylesheet
-   Ispirato a Genius.com, ma con palette blu/notte originale.
-   Font: "Sora" per i titoli (geometrico, bold, editoriale),
-         "Inter" per il corpo del testo,
-         "JetBrains Mono" per numeri traccia / metadati (stile "dato").
+   SCHIRIUS LYRICS — shared/base.css
+   Regole CONDIVISE da tutte le pagine: variabili, reset, font,
+   navbar, barra di ricerca, bottoni, layout generale, card "glass"
+   generica e bottom-nav mobile.
+   Va incluso in OGNI pagina, prima del css specifico della pagina
+   (che vive nella cartella della pagina stessa).
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -26,14 +27,14 @@
   --mobile-accent: #7fc4ff;
   --border: rgba(255, 255, 255, 0.12);
 
-  /* --- Nuove variabili: usate per lo stile "annotazione" in stile Genius --- */
-  --highlight-bg: rgba(127, 196, 255, 0.16);   /* riga di testo evidenziata */
+  /* --- Variabili per lo stile "annotazione" in stile Genius --- */
+  --highlight-bg: rgba(127, 196, 255, 0.16);
   --highlight-border: rgba(127, 196, 255, 0.65);
   --font-display: 'Sora', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-  /* --- Scala di spaziatura coerente (evita margini "a caso") --- */
+  /* --- Scala di spaziatura coerente --- */
   --space-1: 0.5rem;
   --space-2: 1rem;
   --space-3: 1.5rem;
@@ -60,7 +61,6 @@ body {
   background-attachment: fixed;
 }
 
-/* Rispetta chi preferisce meno animazioni */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -92,7 +92,7 @@ body::before {
 }
 
 /* ============================================================
-   TIPOGRAFIA — gerarchia più marcata, stile "editoriale"
+   TIPOGRAFIA
    ============================================================ */
 
 h1, h2, h3, h4,
@@ -185,7 +185,6 @@ h1, h2, h3, h4,
   text-shadow: 0 0 12px rgba(28, 74, 145, 0.7);
 }
 
-/* Sottolineatura "attivo" in stile Genius, ma col nostro accento */
 .navbar .nav-link {
   position: relative;
 }
@@ -244,9 +243,6 @@ h1, h2, h3, h4,
    RICERCA (navbar desktop) — pillola unica con icona integrata
    ============================================================ */
 
-/* Il contenitore, non più il singolo input, porta bordo/sfondo/glow:
-   così input e bottone sembrano un unico pezzo, non due elementi
-   incollati con una cucitura in mezzo. */
 .navbar .search-input-group {
   display: flex;
   align-items: center;
@@ -259,8 +255,6 @@ h1, h2, h3, h4,
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Icona di ricerca disegnata in CSS (cerchio + manico), evita di
-   dipendere da un'icona esterna nell'HTML */
 .navbar .search-input-group::before {
   content: '';
   position: absolute;
@@ -328,9 +322,6 @@ h1, h2, h3, h4,
   box-shadow: none !important;
 }
 
-/* Bottone: solo icona, cerchio pieno che si stacca leggermente
-   dal bordo destro della pillola, invece del blocco rettangolare
-   con angoli tagliati che avevi prima */
 .search-button-primary {
   border-radius: 50% !important;
   border: none !important;
@@ -354,8 +345,6 @@ h1, h2, h3, h4,
   box-shadow: 0 12px 26px rgba(33, 118, 238, 0.34);
 }
 
-/* Su schermi molto stretti la pillola si accorcia invece di
-   spingere il resto della navbar fuori schermo */
 @media (max-width: 1200px) {
   .navbar .search-input-group {
     min-width: 200px;
@@ -388,7 +377,6 @@ h1, h2, h3, h4,
   transform: translateY(-1px);
 }
 
-/* Focus da tastiera sempre visibile (accessibilità) */
 .btn:focus-visible,
 a:focus-visible,
 .form-control:focus-visible {
@@ -414,17 +402,22 @@ a:focus-visible,
 }
 
 /* ============================================================
-   LAYOUT GENERALE
+   LAYOUT GENERALE — condiviso da tutte le pagine
    ============================================================ */
 
 .main-content {
   padding-top: 110px;
 }
 
-.hero-section {
-  padding-bottom: 4rem;
+.section-header {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Card "vetro" generica: usata da hero-card, album-card, .glass e
+   recommendation-card. Gli effetti hover/di dettaglio restano nel
+   css della singola pagina che li usa. */
 .hero-card,
 .card.album-card,
 .card.glass,
@@ -434,163 +427,8 @@ a:focus-visible,
   backdrop-filter: blur(24px);
 }
 
-.hero-card {
-  border-radius: var(--radius-lg);
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.32);
-}
-
-.hero-card .badge {
-  font-family: var(--font-mono);
-  font-weight: 700;
-}
-
-.recommendation-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.recommendation-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(127, 196, 255, 0.28);
-  box-shadow: 0 20px 45px rgba(31, 98, 170, 0.22);
-}
-
-.section-header {
-  max-width: 760px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#albumsMessage {
-  margin-bottom: 2rem;
-}
-
-/* ============================================================
-   ULTIMA USCITA (pagina "In evidenza") — spazio dalla navbar fissa
-   ============================================================ */
-
-/* .main-content ha già padding-top:110px per compensare la navbar,
-   ma questo margine extra dà un respiro visivo in più prima della
-   card "Ultima Uscita", che altrimenti risultava troppo attaccata. */
-.latest-release {
-  margin-top: 1.5rem;
-}
-
-/* ============================================================
-   CARD ARTISTA
-   ============================================================ */
-
-.artist-card {
-  background: rgba(8, 19, 44, 0.95);
-  border: 1px solid rgba(127, 196, 255, 0.22);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.artist-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(31, 98, 170, 0.22), 0 0 0 1px rgba(127, 196, 255, 0.12);
-  border-color: rgba(127, 196, 255, 0.35);
-}
-
-.artist-card h3 {
-  margin-bottom: 0.5rem;
-  color: #ffffff;
-  font-size: 1.05rem;
-  letter-spacing: 0.01em;
-}
-
-.artist-card p {
-  color: var(--text-muted);
-  margin-bottom: 0;
-}
-
-.artist-card .artist-photo {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid rgba(127, 196, 255, 0.25);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-}
-
-.artist-card:hover .artist-photo {
-  transform: scale(1.04);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
-}
-
-/* Header pagina artista — versione "ben visibile": sfondo
-   sensibilmente più chiaro del resto della pagina (non solo un
-   filtro scuro come prima), bordo e glow marcati, foto grande con
-   anello luminoso, testo con leggibilità aumentata */
-.artist-header {
-  display: flex;
-  gap: 1.75rem;
-  align-items: flex-start;
-  background: linear-gradient(145deg, rgba(58, 96, 175, 0.55), rgba(30, 58, 120, 0.5));
-  border: 1px solid rgba(127, 196, 255, 0.6);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 0 0 1px rgba(127, 196, 255, 0.18),
-    0 0 70px rgba(127, 196, 255, 0.3),
-    0 24px 60px rgba(0, 0, 0, 0.4);
-  padding: 2rem;
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(18px);
-}
-
-.artist-header .profile-small {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid rgba(127, 196, 255, 0.55);
-  box-shadow: 0 0 0 6px rgba(127, 196, 255, 0.08), 0 10px 30px rgba(0, 0, 0, 0.35);
-  flex-shrink: 0;
-}
-
-.artist-header .artist-info h2 {
-  margin: 0;
-  font-size: 1.7rem;
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 0.01em;
-}
-
-.artist-header .artist-info p {
-  margin: 0.75rem 0 0 0;
-  color: var(--text);
-  opacity: 0.92;
-  font-size: 1rem;
-  line-height: 1.75;
-}
-
-@media (max-width: 600px) {
-  .artist-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 1.5rem;
-  }
-
-  .artist-header .profile-small {
-    width: 96px;
-    height: 96px;
-  }
-}
-
-.artist-releases {
-  margin-top: 1.25rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
-}
-
-/* .release-card ora può anche essere un link <a> (album/singoli
-   cliccabili): resettiamo gli stili di default del link e rendiamo
-   la card un blocco a tutti gli effetti. */
+/* Card "release" (album/singolo/featuring): riusata da index,
+   pagine artista e performer. */
 .release-card,
 a.release-card {
   background: rgba(8, 19, 44, 0.9);
@@ -625,9 +463,6 @@ a.release-card {
   font-size: 0.9rem;
 }
 
-/* Effetto "illuminato" al passaggio del mouse: bordo acceso +
-   doppio bagliore (uno stretto, uno diffuso) invece della sola
-   ombra scura di sollevamento */
 .release-card:hover,
 a.release-card:hover {
   transform: translateY(-6px);
@@ -639,211 +474,7 @@ a.release-card:hover {
 }
 
 /* ============================================================
-   FEATURING — sezione sotto gli album, stessa card riutilizzata
-   ============================================================ */
-
-.featuring-section {
-  margin-top: 2.5rem;
-}
-
-.featuring-section .section-title {
-  margin-bottom: 1.25rem;
-}
-
-/* ============================================================
-   ALBUM
-   ============================================================ */
-
-.album-card {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-  min-height: 100%;
-  border: none;
-}
-
-.album-card:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3);
-}
-
-.album-cover {
-  min-height: 280px;
-  background-size: cover;
-  background-position: center;
-}
-
-.card-body {
-  padding: 1.6rem;
-}
-
-.card-title {
-  font-size: 1.08rem;
-  font-weight: 700;
-}
-
-.album-page-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 2rem;
-  align-items: start;
-}
-
-.album-cover-large {
-  min-height: 420px;
-  background-size: cover;
-  background-position: center;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
-}
-
-.album-meta {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.meta-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.1rem;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.06);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-}
-
-/* ============================================================
-   TRACCE / LISTA BRANI — numerazione stile "dato" (mono)
-   ============================================================ */
-
-.track-list {
-  margin-top: 1rem;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.track-item,
-.track-row {
-  background: rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 1rem 1.3rem;
-  transition: background-color 0.2s ease;
-}
-
-.track-item:hover,
-.track-row:hover {
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.track-item:last-child,
-.track-row:last-child {
-  border-bottom: none;
-}
-
-.track-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(127, 196, 255, 0.18);
-  margin-right: 0.85rem;
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-}
-
-.track-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: center;
-}
-
-.track-info {
-  display: grid;
-  gap: 0.34rem;
-}
-
-.track-info strong {
-  font-size: 1rem;
-  font-family: var(--font-body);
-  font-weight: 600;
-}
-
-.track-info small {
-  font-size: 0.92rem;
-}
-
-.play-preview {
-  min-width: 140px;
-}
-
-.audio-note {
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-}
-
-.audio-panel {
-  display: grid;
-  gap: 0.85rem;
-  padding: 1.4rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
-  margin-top: 1.5rem;
-}
-
-.player-label {
-  font-weight: 600;
-}
-
-/* ============================================================
-   TESTO / TESTI DELLE CANZONI — la parte "signature" in stile
-   Genius: ogni riga è "annotabile", si evidenzia in blu al passaggio
-   del mouse, come le righe gialle di Genius ma con il nostro accento.
-   ============================================================ */
-
-.lyrics-panel {
-  margin: 0.75rem 0 0 0;
-  padding: 1.5rem 1.75rem;
-  border-radius: var(--radius-md);
-  background: rgba(127, 196, 255, 0.06);
-  color: var(--text);
-  border: 1px solid rgba(127, 196, 255, 0.16);
-}
-
-.lyrics-text {
-  white-space: pre-wrap;
-  line-height: 2;
-  font-size: 1.05rem;
-}
-
-/* Se le righe di testo sono avvolte singolarmente in .lyrics-line,
-   questo le rende "annotabili" come su Genius. Se non usi questa
-   classe nell'HTML, la regola semplicemente non si applica. */
-.lyrics-line {
-  display: inline-block;
-  padding: 0.1rem 0.4rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.18s ease, box-shadow 0.18s ease;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-
-.lyrics-line:hover,
-.lyrics-line.is-annotated {
-  background: var(--highlight-bg);
-  box-shadow: inset 0 -2px 0 var(--highlight-border);
-}
-
-/* ============================================================
-   NAV MOBILE — versione unica, senza duplicazioni/conflitti
+   NAV MOBILE — bottom-nav, presente in ogni pagina
    ============================================================ */
 
 .bottom-nav {
@@ -961,22 +592,4 @@ a.release-card:hover {
 
 @media (min-width: 1001px) {
   .bottom-nav { display: none !important; }
-}
-
-/* ============================================================
-   RESPONSIVE — hero più compatto su schermi piccoli
-   ============================================================ */
-
-@media (max-width: 600px) {
-  .hero-section {
-    padding-bottom: 2.5rem;
-  }
-
-  .hero-card {
-    padding: 2rem;
-  }
-
-  .album-page-header {
-    grid-template-columns: 1fr;
-  }
 }

@@ -1,0 +1,22 @@
+/* ============================================================
+   SCHIRIUS LYRICS — discover.css
+   Stili SOLO per pages/discover/discover.html (stessa cartella). La pagina usa già le card
+   "glass" generiche di base.css: qui aggiungiamo solo l'hover e
+   una rifinitura visiva dedicata a questa pagina.
+   Richiede shared/base.css caricato prima.
+   ============================================================ */
+
+.discover-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  height: 100%;
+}
+
+.discover-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(127, 196, 255, 0.32);
+  box-shadow: 0 20px 45px rgba(31, 98, 170, 0.22);
+}
+
+.discover-card h3 {
+  color: #ffffff;
+}

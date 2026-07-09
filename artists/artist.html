@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Artisti - Schirius</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="../stylesheet/style.css" />
+    <link rel="stylesheet" href="../shared/base.css" />
+    <link rel="stylesheet" href="artist.css" />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
@@ -17,8 +18,8 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="../pages/featured.html">In evidenza</a></li>
-            <li class="nav-item"><a class="nav-link" href="../pages/discover.html">Scopri</a></li>
+            <li class="nav-item"><a class="nav-link" href="../pages/featured/featured.html">In evidenza</a></li>
+            <li class="nav-item"><a class="nav-link" href="../pages/discover/discover.html">Scopri</a></li>
             <li class="nav-item"><a class="nav-link active" href="artist.html">Artisti</a></li>
           </ul>
           <form class="d-flex align-items-center search-input-group" role="search" onsubmit="event.preventDefault(); handleSearch();">
@@ -174,7 +175,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../pages/featured.html">
+            <a class="nav-link" href="../pages/featured/featured.html">
               <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="13" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg></span>
               <span class="label">In Evidenza</span>
             </a>
@@ -189,7 +190,7 @@
 
         <ul class="nav right-group ms-2">
           <li class="nav-item">
-            <a class="nav-link" href="../pages/discover.html">
+            <a class="nav-link" href="../pages/discover/discover.html">
               <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5V6a1 1 0 0 1 1-1h14v14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 21V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               <span class="label">Scopri</span>
             </a>
@@ -205,6 +206,7 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="../js/app.js" defer></script>
+    <script src="../shared/common.js" defer></script>
+    <script src="artist.js" defer></script>
   </body>
 </html>
