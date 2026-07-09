@@ -67,21 +67,65 @@ function setupBottomNav() {
     });
   });
 
+  // Inietta la logica e il bottone per il mobile search box se siamo su mobile
+  const bottomNav = document.querySelector('.bottom-nav');
+  if (bottomNav && !document.getElementById('mobileSearchBox')) {
+    const searchBox = document.createElement('div');
+    searchBox.id = 'mobileSearchBox';
+    searchBox.className = 'mobile-search-box';
+    searchBox.innerHTML = `
+      <form onsubmit="event.preventDefault(); handleMobileSearch();">
+        <input type="search" id="mobileSearchInput" placeholder="Cerca artista, album..." autocomplete="off">
+        <button type="submit">⌕</button>
+      </form>
+    `;
+    bottomNav.parentElement.appendChild(searchBox);
+  }
+
+  // Gestione comparsa barra ricerca mobile
   const searchBtn = document.getElementById('mobileSearchBtn');
   if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-      const input = document.getElementById('searchInput');
-      if (input) {
-        input.focus();
-        // on small screens ensure top logo area visible
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const box = document.getElementById('mobileSearchBox');
+      if (box) {
+        box.classList.toggle('show');
+        if (box.classList.contains('show')) {
+          const input = document.getElementById('mobileSearchInput');
+          if (input) {
+            // Piccolo timeout per l'animazione
+            setTimeout(() => input.focus(), 300);
+          }
+        }
       }
     });
   }
+}
 
-  // Sync active state on scroll
+// Funzione globale per gestire la ricerca da mobile
+window.handleMobileSearch = function() {
+  const input = document.getElementById('mobileSearchInput');
+  if (input && input.value.trim() !== '') {
+    const artist = encodeURIComponent(input.value.trim());
+    
+    // Trova il percorso relativo alla radice del progetto
+    let prefix = '';
+    if (window.location.href.includes('/artists/performer/')) prefix = '../../';
+    else if (window.location.href.includes('/artists/')) prefix = '../';
+    else if (window.location.href.includes('/pages/')) prefix = '../../';
+    
+    // Naviga alla pagina di dettaglio
+    window.location.href = prefix + 'artists/performer/artist-detail.html?artist=' + artist;
+  }
+}
+
+window.addEventListener('DOMContentLoaded', setupBottomNav);
+
+// Sync active state on scroll
+function setupScrollSync() {
   const sections = ['#top', '#featuredSection', '#albumsSection'];
   const targets = sections.map(s => document.querySelector(s)).filter(Boolean);
+  const allLinks = document.querySelectorAll('.bottom-nav .nav-link');
   if (targets.length) {
     const io = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -95,4 +139,20 @@ function setupBottomNav() {
   }
 }
 
-window.addEventListener('DOMContentLoaded', setupBottomNav);
+window.addEventListener('DOMContentLoaded', setupScrollSync);
+
+function handleSearch() {
+  const input = document.getElementById('searchInput');
+  if (input && input.value.trim() !== '') {
+    const artist = encodeURIComponent(input.value.trim());
+    
+    // Trova il percorso relativo alla radice del progetto
+    let prefix = '';
+    if (window.location.href.includes('/artists/performer/')) prefix = '../../';
+    else if (window.location.href.includes('/artists/')) prefix = '../';
+    else if (window.location.href.includes('/pages/')) prefix = '../../';
+    
+    // Naviga alla pagina di dettaglio
+    window.location.href = prefix + 'artists/performer/artist-detail.html?artist=' + artist;
+  }
+}

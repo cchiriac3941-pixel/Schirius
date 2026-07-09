@@ -1,0 +1,108 @@
+/* =========================================
+   GLI STILI BASE ORA EREDITANO DA BASE.CSS
+   (Sfondi, font, colori e navbar sono gestiti centralmente)
+   ========================================= */
+
+/* =========================================
+   HEADER ARTISTA (Stile Apple)
+   ========================================= */
+.artist-header {
+    background: rgba(28, 28, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 2.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Rimosso bagliore dietro la foto per mantenere stile Apple pulito */
+.artist-header::before {
+    display: none;
+}
+
+.profile-small {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.artist-info {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.artist-info h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+}
+
+.artist-info p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #a0a8b5 !important; /* Grigio chiaro per la bio */
+    margin: 0;
+}
+
+/* =========================================
+   GRIGLIA DELLE CANZONI (Artist Releases)
+   ========================================= */
+.artist-releases {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Le card degli album e singoli ora ereditano interamente lo stile da base.css (.release-card) */
+
+/* =========================================
+   SEZIONE TITOLI E TESTI
+   ========================================= */
+.eyebrow {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+.section-title {
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+/* =========================================
+   MEDIA QUERIES (Per l'adattamento sui telefoni)
+   ========================================= */
+@media (max-width: 768px) {
+    .artist-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem;
+    }
+    
+    .artist-info h2 {
+        font-size: 2rem;
+    }
+    
+    .artist-releases {
+        grid-template-columns: repeat(2, 1fr); /* 2 colonne sui telefoni */
+        gap: 1rem;
+    }
+}
