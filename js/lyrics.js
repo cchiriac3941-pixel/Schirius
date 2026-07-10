@@ -49,20 +49,39 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => console.error(err));
 });
 
+function cleanTrackTitle(title) {
+    return title
+        .replace(/\s*\([^)]*(feat\.|ft\.|with|remastered|live|version|edit|remix|acoustic|radio)[^)]*\)/gi, '')
+        .replace(/\s*-\s*(remastered|live|version|edit|remix|acoustic|radio|feat\.|ft\.).*/gi, '')
+        .trim();
+}
+
 function cercaTesto(artista, titolo) {
-    const lyricsUrl = `/api/lyrics?artist=${encodeURIComponent(artista)}&title=${encodeURIComponent(titolo)}`;
+    const cleanTitolo = cleanTrackTitle(titolo);
+    const lyricsUrl = `/api/lyrics?artist=${encodeURIComponent(artista)}&title=${encodeURIComponent(cleanTitolo)}`;
+    
+    const fallbackHTML = `
+        <div style="text-align: center; padding: 40px 20px; opacity: 0.6; white-space: normal;">
+            <h4 style="font-weight: 500; margin-bottom: 10px; font-size: 1.3rem;">Il testo di questo brano non è ancora disponibile.</h4>
+            <p style="font-size: 0.95rem; margin: 0;">Stiamo lavorando per aggiungerlo al nostro database.</p>
+        </div>
+    `;
     
     fetch(lyricsUrl)
         .then(res => res.json())
         .then(data => {
             const lyricsContainer = document.getElementById('lyrics-container');
             if (data.lyrics) {
+                lyricsContainer.style.whiteSpace = 'pre-line';
                 lyricsContainer.textContent = data.lyrics;
             } else {
-                lyricsContainer.textContent = "Testo non trovato. Riprova più tardi.";
+                lyricsContainer.style.whiteSpace = 'normal';
+                lyricsContainer.innerHTML = fallbackHTML;
             }
         })
         .catch(err => {
-            document.getElementById('lyrics-container').textContent = "Errore durante il recupero del testo.";
+            const lyricsContainer = document.getElementById('lyrics-container');
+            lyricsContainer.style.whiteSpace = 'normal';
+            lyricsContainer.innerHTML = fallbackHTML;
         });
 }
