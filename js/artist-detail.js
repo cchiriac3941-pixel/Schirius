@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!artistId && fallbackName) {
             console.log("⚠️ Passato nome ma non ID. Cerco l'ID univoco per: ", fallbackName);
             try {
-                const searchRes = await fetch(`http://localhost:3000/api/search-artist?q=${encodeURIComponent(fallbackName)}`);
+                const searchRes = await fetch(`/api/search-artist?q=${encodeURIComponent(fallbackName)}`);
                 if (searchRes.ok) {
                     const searchData = await searchRes.json();
                     artistId = searchData.id;
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fallbackName = "Sfera Ebbasta";
         }
 
-        const apiUrl = `http://localhost:3000/api/spotify/artist?id=${encodeURIComponent(artistId)}&name=${encodeURIComponent(fallbackName || '')}`;
+        const apiUrl = `/api/spotify/artist?id=${encodeURIComponent(artistId)}&name=${encodeURIComponent(fallbackName || '')}`;
         
         try {
             const response = await fetch(apiUrl);

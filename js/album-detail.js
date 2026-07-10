@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const apiUrl = `http://localhost:3000/api/spotify/album?id=${albumId}`;
+    const apiUrl = `/api/spotify/album?id=${albumId}`;
 
     fetch(apiUrl)
         .then(response => response.json())

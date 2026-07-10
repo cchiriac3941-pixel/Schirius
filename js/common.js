@@ -115,7 +115,7 @@ window.handleMobileSearch = async function() {
     else if (window.location.href.includes('/pages/')) prefix = '../../';
     
     try {
-        const res = await fetch('http://localhost:3000/api/search-artist?q=' + artist);
+        const res = await fetch('/api/search-artist?q=' + artist);
         const data = await res.json();
         if (data.id) {
             window.location.href = prefix + 'pages/artist-detail.html?id=' + encodeURIComponent(data.id) + '&name=' + encodeURIComponent(data.name || input.value.trim());
@@ -162,7 +162,7 @@ window.handleSearch = async function() {
     else if (window.location.href.includes('/pages/')) prefix = '../../';
     
     try {
-        const res = await fetch('http://localhost:3000/api/search-artist?q=' + artist);
+        const res = await fetch('/api/search-artist?q=' + artist);
         const data = await res.json();
         if (data.id) {
             window.location.href = prefix + 'pages/artist-detail.html?id=' + encodeURIComponent(data.id) + '&name=' + encodeURIComponent(data.name || input.value.trim());

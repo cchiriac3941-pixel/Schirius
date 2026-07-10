@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const apiUrl = `http://localhost:3000/api/spotify/track?id=${trackId}`;
+    const apiUrl = `/api/spotify/track?id=${trackId}`;
 
     fetch(apiUrl)
         .then(response => response.json())
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function cercaTesto(artista, titolo) {
-    const lyricsUrl = `http://localhost:3000/api/lyrics?artist=${encodeURIComponent(artista)}&title=${encodeURIComponent(titolo)}`;
+    const lyricsUrl = `/api/lyrics?artist=${encodeURIComponent(artista)}&title=${encodeURIComponent(titolo)}`;
     
     fetch(lyricsUrl)
         .then(res => res.json())

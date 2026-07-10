@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const randomArtist = targetArtists[Math.floor(Math.random() * targetArtists.length)];
         
         try {
-            const res = await fetch(`http://localhost:3000/api/spotify/artist?id=${encodeURIComponent(randomArtist.id)}&name=${encodeURIComponent(randomArtist.name)}`);
+            const res = await fetch(`/api/spotify/artist?id=${encodeURIComponent(randomArtist.id)}&name=${encodeURIComponent(randomArtist.name)}`);
             if (!res.ok) throw new Error("Errore nel caricamento artista");
             const data = await res.json();
             
