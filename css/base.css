@@ -18,13 +18,18 @@
   --accent: #fa233b; /* Apple Music Red */
   --border: rgba(255, 255, 255, 0.1);
 
-  --font-display: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
 
   /* --- Spaziatura e bordi --- */
-  --radius-lg: 24px;
-  --radius-md: 18px;
-  --radius-sm: 12px;
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 16px;
+}
+
+/* Icone sottili in stile SF Symbols */
+svg {
+  stroke-width: 1.2 !important;
 }
 
 * {
@@ -245,14 +250,17 @@ p {
 }
 
 .release-card, a.release-card {
-  background: var(--surface);
-  border: none;
+  background: rgba(30, 30, 32, 0.4);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4);
   border-radius: var(--radius-sm);
   padding: 0;
   overflow: hidden;
   text-decoration: none;
   display: block;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .release-card img {
@@ -284,7 +292,8 @@ p {
 
 .release-card:hover, a.release-card:hover {
   transform: scale(1.03);
-  background: var(--surface-soft);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 15px rgba(255,255,255,0.05);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Card artisti (rotonde) */

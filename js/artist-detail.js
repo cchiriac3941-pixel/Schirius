@@ -3,32 +3,44 @@ console.log("🟢 1. Il file app.js è stato caricato e letto dal browser!");
 document.addEventListener('DOMContentLoaded', () => {
     console.log("🟢 2. L'HTML della pagina è pronto. Inizio la procedura...");
 
-    // 1. Estrae il nome dell'artista dall'URL
-    const params = new URLSearchParams(window.location.search);
-    let artistName = params.get('artist');
-    
-    console.log("🟢 3. Nome artista trovato nell'URL:", artistName);
+    async function initArtist() {
+        const params = new URLSearchParams(window.location.search);
+        let artistId = params.get('id');
+        let fallbackName = params.get('name') || params.get('artist'); 
+        
+        document.getElementById('artist-name').textContent = "Caricamento...";
+        const artistImg = document.getElementById('artist-img');
 
-    // Se per qualche motivo l'URL è vuoto, facciamo un test con Sfera Ebbasta
-    if (!artistName) {
-        artistName = "Sfera Ebbasta";
-        console.log("⚠️ Nessun artista nell'URL, forzo la ricerca per:", artistName);
-    }
+        // Se non c'è l'ID, cerchiamolo tramite l'API di ricerca (per evitare nomi testuali al backend)
+        if (!artistId && fallbackName) {
+            console.log("⚠️ Passato nome ma non ID. Cerco l'ID univoco per: ", fallbackName);
+            try {
+                const searchRes = await fetch(`http://localhost:3000/api/search-artist?q=${encodeURIComponent(fallbackName)}`);
+                if (searchRes.ok) {
+                    const searchData = await searchRes.json();
+                    artistId = searchData.id;
+                    fallbackName = searchData.name || fallbackName;
+                }
+            } catch (e) {
+                console.error("Errore nella ricerca dell'ID", e);
+            }
+        }
 
-    document.getElementById('artist-name').textContent = artistName;
+        if (!artistId) {
+            artistId = "238y1dKPtMeFEpX3Y6H1Vr"; // Sfera Ebbasta ID fallback estremo
+            fallbackName = "Sfera Ebbasta";
+        }
 
-    // 2. Prepara l'indirizzo per il server
-    const apiUrl = `http://localhost:3000/api/spotify/artist?artist=${encodeURIComponent(artistName)}`;
-    console.log("🟢 4. Sto per chiamare il server a questo indirizzo:", apiUrl);
-
-    // 3. Fa la chiamata al backend
-    fetch(apiUrl)
-        .then(response => {
-            console.log("🟢 5. Il server ha risposto! Status Code:", response.status);
-            return response.json();
-        })
-        .then(data => {
-            console.log("🟢 6. Dati ricevuti da Spotify:", data);
+        const apiUrl = `http://localhost:3000/api/spotify/artist?id=${encodeURIComponent(artistId)}&name=${encodeURIComponent(fallbackName || '')}`;
+        
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            
+            const artistNameEl = document.getElementById('artist-name');
+            if (artistNameEl) {
+                artistNameEl.textContent = data.artistName || fallbackName || "Artista Sconosciuto";
+            }
             
             const bioTesto = data.bio || "Nessuna biografia disponibile per questo artista.";
             const canzoni = data.canzoni || [];
@@ -36,6 +48,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const artistBioEl = document.getElementById('artist-bio');
             if (artistBioEl) {
                 artistBioEl.innerHTML = bioTesto.replace(/\n/g, '<br>');
+                
+                if (bioTesto.length > 150) {
+                    artistBioEl.style.display = '-webkit-box';
+                    artistBioEl.style.webkitLineClamp = '4';
+                    artistBioEl.style.webkitBoxOrient = 'vertical';
+                    artistBioEl.style.overflow = 'hidden';
+                    
+                    const toggleBtn = document.createElement('a');
+                    toggleBtn.href = '#';
+                    toggleBtn.textContent = 'Mostra altro';
+                    toggleBtn.style.color = 'rgba(255, 255, 255, 0.8)';
+                    toggleBtn.style.textDecoration = 'underline';
+                    toggleBtn.style.fontSize = '0.9rem';
+                    toggleBtn.style.display = 'inline-block';
+                    toggleBtn.style.marginTop = '5px';
+                    
+                    toggleBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (artistBioEl.style.webkitLineClamp === '4') {
+                            artistBioEl.style.webkitLineClamp = 'unset';
+                            toggleBtn.textContent = 'Mostra meno';
+                        } else {
+                            artistBioEl.style.webkitLineClamp = '4';
+                            toggleBtn.textContent = 'Mostra altro';
+                        }
+                    });
+                    
+                    artistBioEl.parentNode.insertBefore(toggleBtn, artistBioEl.nextSibling);
+                }
             }
 
             const albumsContainer = document.getElementById('albums-container');
@@ -45,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const featuringContainer = document.getElementById('featuring-container');
             const featuringSection = document.getElementById('featuring-section');
             
-            // Svuota i caricamenti precedenti
             if (albumsContainer) albumsContainer.innerHTML = '';
             if (albumsSection) albumsSection.style.display = 'none';
             if (singlesContainer) singlesContainer.innerHTML = '';
@@ -57,19 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let haSingoli = false;
             let haFeaturing = false;
 
-            const artistImg = document.getElementById('artist-img');
-            if (artistImg && data.artistImage) {
-                artistImg.src = data.artistImage;
+            // FOTO PROFILO E PLACEHOLDER
+            if (artistImg) {
+                artistImg.src = data.artistImage || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
                 artistImg.style.display = 'block';
             }
 
             if (canzoni && canzoni.length > 0) {
-                // Se l'immagine non era presente nel profilo, usa la copertina del primo brano
-                if (artistImg && !data.artistImage && canzoni[0].copertina) {
-                    artistImg.src = canzoni[0].copertina;
-                    artistImg.style.display = 'block';
-                }
-
                 // Crea le card
                 canzoni.forEach(canzione => {
                     const card = document.createElement('a');
@@ -109,10 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (singlesContainer) singlesContainer.innerHTML = '<p>Nessun contenuto trovato.</p>';
                 if (singlesSection) singlesSection.style.display = 'block';
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.error("🔴 ERRORE CRITICO DURANTE IL RECUPERO DATI:", error);
-        });
+        }
+    }
+    
+    initArtist();
 });
 
 window.handleSearch = function() {
@@ -123,6 +159,6 @@ window.handleSearch = function() {
 
     if (artistaCercato !== "") {
         // Reindirizza alla stessa pagina ma cambiando il nome dell'artista nell'URL
-        window.location.href = `/artists/performer/artist-detail.html?artist=${encodeURIComponent(artistaCercato)}`;
+        window.location.href = `/pages/artist-detail.html?artist=${encodeURIComponent(artistaCercato)}`;
     }
 }

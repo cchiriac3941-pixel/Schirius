@@ -103,7 +103,7 @@ function setupBottomNav() {
 }
 
 // Funzione globale per gestire la ricerca da mobile
-window.handleMobileSearch = function() {
+window.handleMobileSearch = async function() {
   const input = document.getElementById('mobileSearchInput');
   if (input && input.value.trim() !== '') {
     const artist = encodeURIComponent(input.value.trim());
@@ -114,8 +114,17 @@ window.handleMobileSearch = function() {
     else if (window.location.href.includes('/artists/')) prefix = '../';
     else if (window.location.href.includes('/pages/')) prefix = '../../';
     
-    // Naviga alla pagina di dettaglio
-    window.location.href = prefix + 'artists/performer/artist-detail.html?artist=' + artist;
+    try {
+        const res = await fetch('http://localhost:3000/api/search-artist?q=' + artist);
+        const data = await res.json();
+        if (data.id) {
+            window.location.href = prefix + 'pages/artist-detail.html?id=' + encodeURIComponent(data.id) + '&name=' + encodeURIComponent(data.name || input.value.trim());
+        } else {
+            alert('Artista non trovato.');
+        }
+    } catch (e) {
+        alert('Errore di ricerca.');
+    }
   }
 }
 
@@ -141,7 +150,7 @@ function setupScrollSync() {
 
 window.addEventListener('DOMContentLoaded', setupScrollSync);
 
-function handleSearch() {
+window.handleSearch = async function() {
   const input = document.getElementById('searchInput');
   if (input && input.value.trim() !== '') {
     const artist = encodeURIComponent(input.value.trim());
@@ -152,7 +161,16 @@ function handleSearch() {
     else if (window.location.href.includes('/artists/')) prefix = '../';
     else if (window.location.href.includes('/pages/')) prefix = '../../';
     
-    // Naviga alla pagina di dettaglio
-    window.location.href = prefix + 'artists/performer/artist-detail.html?artist=' + artist;
+    try {
+        const res = await fetch('http://localhost:3000/api/search-artist?q=' + artist);
+        const data = await res.json();
+        if (data.id) {
+            window.location.href = prefix + 'pages/artist-detail.html?id=' + encodeURIComponent(data.id) + '&name=' + encodeURIComponent(data.name || input.value.trim());
+        } else {
+            alert('Artista non trovato.');
+        }
+    } catch (e) {
+        alert('Errore di ricerca.');
+    }
   }
 }
