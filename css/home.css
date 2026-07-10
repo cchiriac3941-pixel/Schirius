@@ -57,3 +57,10 @@
     padding: 2rem;
   }
 }
+
+.neon-glow {
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.3), 
+    0 0 40px rgba(176, 38, 255, 0.7), 
+    0 0 80px rgba(176, 38, 255, 0.5);
+}

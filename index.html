@@ -1,139 +1,171 @@
 <!DOCTYPE html>
 <html lang="it">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Schirius Lyrics</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <link rel="stylesheet" href="css/base.css" />
-    <link rel="stylesheet" href="css/home.css" />
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold" href="#top">Schirius</a>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages/featured.html">In evidenza</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="pages/discover.html">Scopri</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="pages/artist.html">Artisti</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex align-items-center search-input-group" role="search" onsubmit="event.preventDefault(); handleSearch();">
-                        <input id="searchInput" class="form-control" type="search" placeholder="Cerca artista, album..." aria-label="Cerca" />
-                        <button id="searchBtn" class="btn search-button-primary" type="button">⌕</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <main id="top" class="main-content">
-          <section class="hero-section pt-5">
-            <div class="container py-5 text-white">
-              <div class="row justify-content-center">
-                <div class="col-lg-8">
-                  <div class="hero-card glass p-5 shadow-lg text-center">
-                    <p class="text-uppercase small fw-semibold text-accent">Ultima uscita</p>
-                    <h1 class="display-6 fw-bold mb-3">Prossimo aggiornamento artista</h1>
-                    <p class="lead text-white-75 mb-4">Qui sarà mostrata l’ultima uscita dell’artista selezionato. Inserisci il nome e i dettagli dell’album quando sei pronto.</p>
-                    <div class="release-card p-4 rounded-4 border border-white border-opacity-10">
-                      <h2 class="h4 mb-2" id="latestReleaseTitle">Titolo dell’uscita</h2>
-                      <p class="mb-1" id="latestReleaseArtist">Artista: <strong>Nome artista</strong></p>
-                      <p class="text-muted mb-3" id="latestReleaseDate">Data di pubblicazione: --/--/----</p>
-                      <p class="text-white-50 mb-0" id="latestReleaseDescription">Descrizione breve della nuova uscita, il singolo o l’album più recente.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row g-4 mt-4 justify-content-center">
-                <div class="col-sm-6 col-lg-3">
-                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
-                    <p class="eyebrow mb-2">Consigliato</p>
-                    <h3 class="h5 mb-2">Album 1</h3>
-                    <p class="text-white-50 mb-3">Artista / Genere</p>
-                    <span class="badge rounded-pill bg-primary bg-opacity-90">Nuovo</span>
-                  </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
-                    <p class="eyebrow mb-2">Consigliato</p>
-                    <h3 class="h5 mb-2">Album 2</h3>
-                    <p class="text-white-50 mb-3">Artista / Genere</p>
-                    <span class="badge rounded-pill bg-secondary bg-opacity-90">Top</span>
-                  </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
-                    <p class="eyebrow mb-2">Consigliato</p>
-                    <h3 class="h5 mb-2">Album 3</h3>
-                    <p class="text-white-50 mb-3">Artista / Genere</p>
-                    <span class="badge rounded-pill bg-info bg-opacity-90">Trend</span>
-                  </div>
-                </div>
-                <div class="col-sm-6 col-lg-3">
-                  <div class="recommendation-card p-4 rounded-4 border border-white border-opacity-10 shadow-sm text-start">
-                    <p class="eyebrow mb-2">Consigliato</p>
-                    <h3 class="h5 mb-2">Album 4</h3>
-                    <p class="text-white-50 mb-3">Artista / Genere</p>
-                    <span class="badge rounded-pill bg-success bg-opacity-90">Scelto</span>
-                  </div>
+  <title>Schirius Lyrics</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+
+<body>
+  <!-- Mobile Top Nav -->
+  <nav class="mobile-top-nav">
+    <a class="brand-logo text-decoration-none" href="index.html">Schirius <span class="brand-subtitle">Lyrics</span></a>
+  </nav>
+  <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand brand-logo" href="#top">Schirius <span class="brand-subtitle">Lyrics</span></a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages/featured.html">In evidenza</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages/discover.html">Scopri</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages/artist.html">Artisti</a>
+          </li>
+        </ul>
+        <form class="d-flex align-items-center search-input-group" role="search"
+          onsubmit="event.preventDefault(); handleSearch();">
+          <input id="searchInput" class="form-control" type="search" placeholder="Cerca artista, album..."
+            aria-label="Cerca" />
+          <button id="searchBtn" class="btn search-button-primary" type="button">⌕</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top" class="main-content">
+    <section class="hero-section pt-5 mt-5">
+      <div class="container pb-5 text-white text-center">
+
+        <!-- Titolo Centrale di grande impatto -->
+        <h1 class="display-2 fw-bold mb-5 neon-glow brand-logo" style="letter-spacing: -2px;">Schirius <span
+            class="brand-subtitle" style="font-size: 0.4em;">Lyrics</span></h1>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+
+            <!-- Contenitore Album Consigliato (Hero) -->
+            <div class="text-start mb-5" id="recommended-album-container">
+              <h2 class="h4 mb-4 fw-bold">Album Consigliato</h2>
+              <div class="hero-card p-0 overflow-hidden d-flex flex-column flex-md-row text-center text-md-start"
+                style="min-height: 300px;">
+                <!-- Verrà popolato da JS -->
+                <div class="d-flex w-100 justify-content-center align-items-center p-5 text-muted">
+                  <div class="spinner-border text-secondary" role="status"></div>
+                  <span class="ms-3">Ricerca capolavori in corso...</span>
                 </div>
               </div>
             </div>
-          </section>
-        </main>
-        <!-- Bottom navigation for small screens with central search -->
-        <nav class="bottom-nav" aria-label="Bottom navigation">
-          <div class="bottom-inner d-flex align-items-center">
-            <ul class="nav left-group me-2">
-              <li class="nav-item">
-                <a class="nav-link" href="index.html">
-                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  <span class="label">Home</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="pages/featured.html">
-                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="13" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/></svg></span>
-                  <span class="label">In Evidenza</span>
-                </a>
-              </li>
-            </ul>
 
-            <div class="search-center">
-              <button id="mobileSearchBtn" class="search-button" aria-label="Cerca">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+            <!-- Contenitore Singoli Consigliati -->
+            <div class="text-start" id="recommended-singles-container">
+              <h2 class="h4 mb-4 fw-bold">Singoli Consigliati</h2>
+              <div class="row g-4" id="recommended-singles-grid">
+                <!-- Verrà popolato da JS -->
+              </div>
             </div>
 
-            <ul class="nav right-group ms-2">
-              <li class="nav-item">
-                <a class="nav-link" href="pages/discover.html">
-                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5V6a1 1 0 0 1 1-1h14v14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 21V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  <span class="label">Scopri</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="pages/artist.html">
-                  <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                  <span class="label">Artisti</span>
-                </a>
-              </li>
-            </ul>
           </div>
-        </nav>
+        </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-        <script src="js/common.js" defer></script>
-    <script src="js/home.js" defer></script>
-    </body>
+      </div>
+    </section>
+  </main>
+  <!-- Global Footer -->
+  <footer class="global-footer mt-5 py-5 border-top border-white border-opacity-10 text-center text-muted">
+    <div class="container">
+      <h5 class="fw-bold text-white mb-3">Schirius Lyrics</h5>
+      <div class="d-flex justify-content-center gap-4 mb-3">
+        <a href="#" class="text-muted text-decoration-none hover-white">Chi siamo</a>
+        <a href="#" class="text-muted text-decoration-none hover-white">Contatti</a>
+        <a href="#" class="text-muted text-decoration-none hover-white">Termini di servizio</a>
+      </div>
+      <small>&copy; 2026 Schirius. Tutti i diritti riservati.</small>
+    </div>
+  </footer>
+  <!-- Bottom navigation for small screens with central search -->
+  <nav class="bottom-nav" aria-label="Bottom navigation">
+    <div class="bottom-inner d-flex align-items-center">
+      <ul class="nav left-group me-2">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">
+            <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10.5z" stroke="currentColor"
+                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+            <span class="label">Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/featured.html">
+            <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" />
+                <rect x="13" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" />
+              </svg></span>
+            <span class="label">In Evidenza</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="search-center">
+        <button id="mobileSearchBtn" class="search-button" aria-label="Cerca">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <ul class="nav right-group ms-2">
+        <li class="nav-item">
+          <a class="nav-link" href="pages/discover.html">
+            <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 19.5V6a1 1 0 0 1 1-1h14v14.5" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M8 21V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg></span>
+            <span class="label">Scopri</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="pages/artist.html">
+            <span class="icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M21 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+            <span class="label">Artisti</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="js/common.js" defer></script>
+  <script src="js/home.js" defer></script>
+</body>
+
 </html>
