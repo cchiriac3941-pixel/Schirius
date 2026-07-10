@@ -589,9 +589,34 @@ app.get('/api/spotify/track', async (req, res) => {
 app.get('/api/lyrics', async (req, res) => {
   const { artist, title } = req.query;
   try {
+    const searchQuery = `${title} ${artist}`;
+    const searchRes = await fetch(`https://api.genius.com/search?q=${encodeURIComponent(searchQuery)}`, {
+        headers: { 'Authorization': `Bearer ${GENIUS_TOKEN}` }
+    });
+    const searchData = await searchRes.json();
+    const hit = searchData.response?.hits?.find(h => h.type === 'song');
+    
+    if (hit && hit.result.url) {
+        const pageRes = await fetch(hit.result.url);
+        const html = await pageRes.text();
+        const lyricsContainers = html.match(/<div data-lyrics-container="true"[^>]*>([\s\S]*?)<\/div>/g);
+        
+        if (lyricsContainers) {
+            let lyrics = lyricsContainers.join('\n');
+            lyrics = lyrics.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '');
+            lyrics = lyrics.replace(/&#x27;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+            
+            // Pulisce l'intestazione indesiderata di Genius (es. "38 ContributorsTitolo Lyrics")
+            lyrics = lyrics.replace(/.*Contributors.*?Lyrics\s*\n*/i, '');
+            
+            return res.json({ lyrics: lyrics.trim() });
+        }
+    }
+    
+    // Fallback su lyrics.ovh se Genius fallisce o non ha il testo
     const lyricsRes = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`);
     const data = await lyricsRes.json();
-    res.json({ lyrics: data.lyrics || "Testo non trovato. Riprova più tardi." });
+    res.json({ lyrics: data.lyrics || "" });
   } catch (err) {
     res.status(500).json({ error: 'Testo non trovato' });
   }
