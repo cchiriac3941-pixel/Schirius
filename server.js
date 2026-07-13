@@ -99,7 +99,7 @@ app.get('/api/home-recommendations', async (req, res) => {
         let isHero = recommendations.length === 0;
         
         if (isHero) {
-            const albumsRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album,single&limit=1`, {
+            const albumsRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album&limit=1`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const albumsData = await albumsRes.json();
@@ -114,18 +114,19 @@ app.get('/api/home-recommendations', async (req, res) => {
                 });
             }
         } else {
-            const topTracksRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=IT`, {
+            // Sostituito /top-tracks (che ora dà 403) con gli ultimi singoli dell'artista
+            const singlesRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=single&limit=1`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            const topTracksData = await topTracksRes.json();
+            const singlesData = await singlesRes.json();
             
-            if (topTracksData.tracks && topTracksData.tracks.length > 0) {
-              const track = topTracksData.tracks[0];
+            if (singlesData.items && singlesData.items.length > 0) {
+              const single = singlesData.items[0];
               recommendations.push({
-                id: track.id,
-                title: track.name,
+                id: single.id,
+                title: single.name,
                 artist: artist.name,
-                cover: track.album.images && track.album.images.length > 0 ? track.album.images[0].url : '',
+                cover: single.images && single.images.length > 0 ? single.images[0].url : '',
                 type: 'track'
               });
             }
@@ -305,14 +306,15 @@ app.get('/api/spotify/artist', async (req, res) => {
     }
     
     let allAlbums = [];
-    let nextUrl = spotifyArtistId ? `https://api.spotify.com/v1/artists/${spotifyArtistId}/albums?include_groups=album,single,appears_on&limit=50&offset=0` : null;
+    // Spotify ha ridotto il limite massimo da 50 a 10 per questo endpoint
+    let nextUrl = spotifyArtistId ? `https://api.spotify.com/v1/artists/${spotifyArtistId}/albums?include_groups=album,single,appears_on&limit=10&offset=0` : null;
     let fallbackTriggered = false;
 
     if (!nextUrl) fallbackTriggered = true; // Salta Spotify se abbiamo solo ID iTunes
 
-    // Prendi tutti gli album paginati (massimo 20 pagine per non bloccare ma garantire catalogo completo)
+    // Prendi tutti gli album paginati (fino a 50 pagine da 10 per supportare 500 risultati)
     let pagesFetched = 0;
-    while (nextUrl && pagesFetched < 20 && !fallbackTriggered) {
+    while (nextUrl && pagesFetched < 50 && !fallbackTriggered) {
       if (!token) {
           token = await getSpotifyToken();
       }
