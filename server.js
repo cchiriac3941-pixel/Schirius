@@ -324,6 +324,9 @@ app.get('/api/spotify/artist', async (req, res) => {
         break;
       }
       
+      // Delay anti Rate Limit
+      await new Promise(r => setTimeout(r, 100));
+      
       const albumsData = await albumsRes.json();
       if (albumsData && albumsData.items) {
           allAlbums = allAlbums.concat(albumsData.items);
@@ -456,6 +459,9 @@ app.get('/api/spotify/artist', async (req, res) => {
                 break;
             }
             
+            // Delay anti Rate Limit
+            await new Promise(r => setTimeout(r, 100));
+            
             if (batchRes.ok) {
                 const batchData = await batchRes.json();
                 if (batchData.albums) {
@@ -469,7 +475,7 @@ app.get('/api/spotify/artist', async (req, res) => {
                                         // Se è il primo artista della traccia, consideralo un suo 'single', altrimenti 'appears_on' (vero featuring)
                                         let trackGroup = (track.artists.length > 0 && track.artists[0].id === spotifyArtistId) ? 'single' : 'appears_on';
                                         canzoni.push({
-                                            id: track.id,
+                                            id: album.id, // Usa l'id dell'album per aprire album-detail.html
                                             titolo: track.name,
                                             artista: track.artists.map(a => a.name).join(', '),
                                             copertina: album.images && album.images.length > 0 ? album.images[0].url : '',
