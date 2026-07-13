@@ -69,8 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 recommendedSingles.forEach(single => {
                     const col = document.createElement('div');
                     col.className = 'col-6 col-md-3 mb-4';
+                    // Indirizza alla pagina album-detail dato che l'API ora restituisce l'id dell'album/singolo
                     col.innerHTML = `
-                        <a href="pages/lyrics.html?id=${single.id}&track=${encodeURIComponent(single.title)}&artist=${encodeURIComponent(single.artist)}" class="release-card h-100 recommendation-card">
+                        <a href="pages/album-detail.html?id=${single.id}&name=${encodeURIComponent(single.title)}" class="release-card h-100 recommendation-card">
                             <div class="position-relative">
                                 <img src="${single.cover}" alt="${single.title}" loading="lazy">
                                 <div class="play-overlay">

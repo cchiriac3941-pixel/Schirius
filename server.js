@@ -102,33 +102,36 @@ app.get('/api/home-recommendations', async (req, res) => {
             const albumsRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album&limit=1`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            const albumsData = await albumsRes.json();
-            if (albumsData.items && albumsData.items.length > 0) {
-                const album = albumsData.items[0];
-                recommendations.push({
-                    id: album.id,
-                    title: album.name,
-                    artist: artist.name,
-                    cover: album.images && album.images.length > 0 ? album.images[0].url : '',
-                    type: 'album'
-                });
+            if (albumsRes.ok) {
+                const albumsData = await albumsRes.json();
+                if (albumsData.items && albumsData.items.length > 0) {
+                    const album = albumsData.items[0];
+                    recommendations.push({
+                        id: album.id,
+                        title: album.name,
+                        artist: artist.name,
+                        cover: album?.images?.[0]?.url || album?.album?.images?.[0]?.url || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+                        type: 'album'
+                    });
+                }
             }
         } else {
             // Sostituito /top-tracks (che ora dà 403) con gli ultimi singoli dell'artista
             const singlesRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=single&limit=1`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            const singlesData = await singlesRes.json();
-            
-            if (singlesData.items && singlesData.items.length > 0) {
-              const single = singlesData.items[0];
-              recommendations.push({
-                id: single.id,
-                title: single.name,
-                artist: artist.name,
-                cover: single.images && single.images.length > 0 ? single.images[0].url : '',
-                type: 'track'
-              });
+            if (singlesRes.ok) {
+                const singlesData = await singlesRes.json();
+                if (singlesData.items && singlesData.items.length > 0) {
+                  const single = singlesData.items[0];
+                  recommendations.push({
+                    id: single.id,
+                    title: single.name,
+                    artist: artist.name,
+                    cover: single?.images?.[0]?.url || single?.album?.images?.[0]?.url || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+                    type: 'track'
+                  });
+                }
             }
         }
       }
@@ -145,12 +148,13 @@ app.get('/api/home-recommendations', async (req, res) => {
     }
   } catch (err) {
     console.error("Errore home-recommendations", err);
+    // Dati di fallback reali (Album veri da iTunes invece di tracce) con ID Collection validi per superare i blocchi API.
     const emergencyFallback = [
-      { id: "0", title: "Cenere", artist: "Lazza", artistId: "238y1dKPtMeFEpX3Y6H1Vr", cover: "https://i.scdn.co/image/ab67616d0000b27386d4e13589ddb6bc63914a51", type: "track" },
-      { id: "1", title: "Visiera A Becco", artist: "Sfera Ebbasta", artistId: "238y1dKPtMeFEpX3Y6H1Vr", cover: "https://i.scdn.co/image/ab67616d0000b273b4c10cbbaeb6686a3454b6df", type: "track" },
-      { id: "2", title: "Non Lo Sai", artist: "Shiva", artistId: "3tZz48CqNymCkk3nQyL0wK", cover: "https://i.scdn.co/image/ab67616d0000b2739343715c0e17918a996bd598", type: "track" },
-      { id: "3", title: "Capri Sun", artist: "Capo Plaza", artistId: "3vV833777o3L6yU23BvYol", cover: "https://i.scdn.co/image/ab67616d0000b273edff8a9366dfdfc26cf4f201", type: "track" },
-      { id: "4", title: "Anelli E Collane", artist: "Artie 5ive", artistId: "1665672879", cover: "https://i.scdn.co/image/ab67616d0000b273c5cf8c392ed9aeb0c2da9f86", type: "track" }
+        { id: "1668997865", title: "Cenere", artist: "Lazza", artistId: "238y1dKPtMeFEpX3Y6H1Vr", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/bc/9f/95/bc9f95f4-3ea3-9d48-356a-2dfcd7fcceb2/23UMGIM08249.rgb.jpg/600x600bb.jpg", type: "track" },
+        { id: "1440864547", title: "Visiera A Becco", artist: "Sfera Ebbasta", artistId: "23TFHmajVfBtlRx5MXqgoz", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/ac/b7/21/acb72195-e5bf-f6bd-5f1e-e886ea1cb6e7/00602557145502.rgb.jpg/600x600bb.jpg", type: "track" },
+        { id: "1654187943", title: "Non lo sai", artist: "Shiva", artistId: "0L1yQIKdMofE8yU05b8F3T", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/ce/22/0c/ce220c8f-f14a-f3e0-6a0c-613d9692ddda/196871510486.jpg/600x600bb.jpg", type: "track" },
+        { id: "1857815238", title: "Capri Sun", artist: "Capo Plaza", artistId: "6XW4B9ZJdcbUqA1mIigIIf", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b9/62/8b/b9628bde-dce3-5967-dfdc-4d2c88421b8f/5054197940173.jpg/600x600bb.jpg", type: "track" },
+        { id: "1858575519", title: "Anelli E Collane", artist: "Artie 5ive", artistId: "5Fm7jYF6s1wV3W1pP75B3Z", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/c7/2b/8e/c72b8ee3-e407-35ad-3236-41718fdf9dc7/5054198007202.jpg/600x600bb.jpg", type: "track" }
     ];
     return res.json(emergencyFallback);
   }
@@ -320,14 +324,27 @@ app.get('/api/spotify/artist', async (req, res) => {
       }
       let albumsRes = await fetch(nextUrl, { headers: { 'Authorization': `Bearer ${token}` } });
       
+      // Gestione intelligente del Rate Limit
+      if (albumsRes.status === 429) {
+          let retryAfter = albumsRes.headers.get('Retry-After') || 2;
+          if (retryAfter > 3) {
+              console.log(`Rate Limit troppo lungo (${retryAfter}s). Forzo fallback iTunes immediato.`);
+              fallbackTriggered = true;
+              break;
+          }
+          console.log(`Rate Limit su /albums. Attesa di ${retryAfter}s prima di riprovare...`);
+          await new Promise(r => setTimeout(r, retryAfter * 1000));
+          albumsRes = await fetch(nextUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+      }
+
       if (albumsRes.status === 429 || !albumsRes.ok) {
-        console.log("Errore o Rate Limit su /albums in Spotify. Fallback iTunes avanzato attivato...");
+        console.log("Errore critico su /albums in Spotify. Fallback iTunes attivato...");
         fallbackTriggered = true;
         break;
       }
       
-      // Delay anti Rate Limit
-      await new Promise(r => setTimeout(r, 100));
+      // Delay preventivo anti Rate Limit aumentato a 250ms
+      await new Promise(r => setTimeout(r, 250));
       
       const albumsData = await albumsRes.json();
       if (albumsData && albumsData.items) {
@@ -374,21 +391,12 @@ app.get('/api/spotify/artist', async (req, res) => {
         });
 
         Array.from(uniqueCollections.values()).forEach(item => {
-            let itemArtistLower = item.artistName.toLowerCase();
-            let targetArtistLower = artistName.toLowerCase();
-            
-            // Se l'artista target è il primo nominato, consideralo un suo album principale
-            let isPrimary = itemArtistLower === targetArtistLower || 
-                            itemArtistLower.startsWith(targetArtistLower + " &") || 
-                            itemArtistLower.startsWith(targetArtistLower + ",");
-            
             // Se l'ID di iTunes NON coincide col VERO artista, scartalo categoricamente per evitare omonimie
-            if (trueItunesArtistId && item.artistId !== trueItunesArtistId) {
+            if (!trueItunesArtistId || item.artistId !== trueItunesArtistId) {
                 return;
             }
             
-            // Se non è primary, è un featuring
-            let computedGroup = !isPrimary ? 'appears_on' : (item.trackCount <= 3 ? 'single' : 'album');
+            let computedGroup = item.trackCount <= 3 ? 'single' : 'album';
             let titolo = item.collectionName;
             
             let cleanTitle = titolo.toLowerCase().replace(/\s*\(feat\..*?\)/g, '').replace(/\s*\(radio edit\)/g, '').trim();
@@ -403,7 +411,58 @@ app.get('/api/spotify/artist', async (req, res) => {
                 album_group: computedGroup,
                 release_date: item.releaseDate ? item.releaseDate.substring(0, 10) : ''
             });
-        });        
+        });
+
+        // RECUPERO B: Featuring da iTunes (Rigido ed Esatto, potenziato per i titoli)
+        // Siccome Spotify è in blocco (429) e iTunes NON fornisce ID array per i feat,
+        // simuliamo un match "ID strict" separando accuratamente tutti gli artisti.
+        try {
+            let songSearchRes = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artistName)}&entity=song&limit=200&country=IT`);
+            if (songSearchRes.ok) {
+                const songData = await songSearchRes.json();
+                songData.results.forEach(song => {
+                    if (!song || !song.artistName) return;
+                    
+                    let targetLower = artistName.toLowerCase().trim();
+                    
+                    // 1. Array da artistName
+                    let artistiDaNome = song.artistName.toLowerCase()
+                                            .split(/[,&/]| feat\. | ft\. | featuring /)
+                                            .map(s => s.trim());
+                    
+                    // 2. Array da trackName (estraiamo tutto quello che c'è dopo feat. fino alla parentesi)
+                    let artistiDaTitolo = [];
+                    let trackNameRaw = song.trackName || "";
+                    let featMatch = trackNameRaw.toLowerCase().match(/(?:feat\.|ft\.|featuring)\s+([^\])]+)/);
+                    if (featMatch) {
+                        artistiDaTitolo = featMatch[1].split(/[,&/]/).map(s => s.trim());
+                    }
+
+                    // Uniamo tutti i possibili artisti
+                    let tuttiGliArtisti = [...artistiDaNome, ...artistiDaTitolo];
+                    
+                    let isPrimary = tuttiGliArtisti.length > 0 && tuttiGliArtisti[0] === targetLower;
+                    
+                    // Condizione ferrea: l'artista non è il primo, ma il suo VERO nome esatto è nella lista
+                    // Questo scarta automaticamente "Luca Lazza", "Lazzaretto" o simili.
+                    if (!isPrimary && tuttiGliArtisti.includes(targetLower)) {
+                        let trackName = song.trackName || "";
+                        let cleanTitle = trackName.toLowerCase().replace(/\s*\(feat\..*?\)/g, '').replace(/\s*\(radio edit\)/g, '').trim();
+                        if (!visti.has(cleanTitle)) {
+                            visti.add(cleanTitle);
+                            canzoni.push({
+                                id: song.collectionId ? song.collectionId.toString() : (song.trackId ? song.trackId.toString() : ""),
+                                titolo: trackName,
+                                artista: song.artistName || "Sconosciuto",
+                                copertina: song.artworkUrl100 ? song.artworkUrl100.replace('100x100bb', '600x600bb') : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+                                album_group: 'appears_on',
+                                release_date: song.releaseDate ? song.releaseDate.substring(0, 10) : ''
+                            });
+                        }
+                    }
+                });
+            }
+        } catch(e) { console.error("Errore recupero feats iTunes", e); }
     }
     
     const appearsOnAlbumIds = [];
@@ -457,36 +516,52 @@ app.get('/api/spotify/artist', async (req, res) => {
             let batchRes = await fetch(`https://api.spotify.com/v1/albums?ids=${batchIds}`, { headers: { 'Authorization': `Bearer ${token}` } });
             
             if (batchRes.status === 429) {
-                console.warn(`Rate limit su /albums?ids. Salto i restanti.`);
+                let retryAfter = batchRes.headers.get('Retry-After') || 2;
+                if (retryAfter > 3) {
+                    console.warn(`Rate limit su /albums?ids troppo lungo (${retryAfter}s). Salto restanti batch.`);
+                    break;
+                }
+                console.warn(`Rate limit su /albums?ids. Attesa di ${retryAfter}s...`);
+                await new Promise(r => setTimeout(r, retryAfter * 1000));
+                batchRes = await fetch(`https://api.spotify.com/v1/albums?ids=${batchIds}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            }
+
+            if (batchRes.status === 429) {
+                console.warn(`Ancora Rate limit. Salto i restanti.`);
                 break;
             }
             
-            // Delay anti Rate Limit
-            await new Promise(r => setTimeout(r, 100));
+            // Delay preventivo anti Rate Limit
+            await new Promise(r => setTimeout(r, 250));
             
             if (batchRes.ok) {
                 const batchData = await batchRes.json();
                 if (batchData.albums) {
                     for (const album of batchData.albums) {
-                        if (album && album.tracks && album.tracks.items) {
-                            for (const track of album.tracks.items) {
-                                if (track.artists.some(a => a.id === spotifyArtistId)) {
-                                    let normName = normalizeTrackName(track.name);
-                                    if (!visti.has(normName)) {
-                                        visti.add(normName);
-                                        // Se è il primo artista della traccia, consideralo un suo 'single', altrimenti 'appears_on' (vero featuring)
-                                        let trackGroup = (track.artists.length > 0 && track.artists[0].id === spotifyArtistId) ? 'single' : 'appears_on';
-                                        canzoni.push({
-                                            id: album.id, // Usa l'id dell'album per aprire album-detail.html
-                                            titolo: track.name,
-                                            artista: track.artists.map(a => a.name).join(', '),
-                                            copertina: album.images && album.images.length > 0 ? album.images[0].url : '',
-                                            album_group: trackGroup,
-                                            release_date: album.release_date
-                                        });
+                        try {
+                            if (album && album.tracks && album.tracks.items) {
+                                for (const track of album.tracks.items) {
+                                    if (track && track.artists && track.artists.some(a => a && a.id === spotifyArtistId)) {
+                                        let trackName = track.name || "";
+                                        let normName = normalizeTrackName(trackName);
+                                        if (!visti.has(normName)) {
+                                            visti.add(normName);
+                                            // Se è il primo artista della traccia, consideralo un suo 'single', altrimenti 'appears_on' (vero featuring)
+                                            let trackGroup = (track.artists.length > 0 && track.artists[0].id === spotifyArtistId) ? 'single' : 'appears_on';
+                                            canzoni.push({
+                                                id: album.id, // Usa l'id dell'album per aprire album-detail.html
+                                                titolo: trackName,
+                                                artista: track.artists.map(a => a.name).join(', '),
+                                                copertina: album?.images?.[0]?.url || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+                                                album_group: trackGroup,
+                                                release_date: album.release_date || ''
+                                            });
+                                        }
                                     }
                                 }
                             }
+                        } catch (innerErr) {
+                            console.error("Errore recupero traccia in batch", innerErr);
                         }
                     }
                 }
@@ -526,8 +601,20 @@ app.get('/api/spotify/album', async (req, res) => {
           if (itunesData.results && itunesData.results.length > 0) {
               // Il primo risultato è l'album, i successivi sono le canzoni
               const albumInfo = itunesData.results.find(r => r.wrapperType === 'collection');
-              const tracce = itunesData.results.filter(r => r.wrapperType === 'track');
+              let tracce = itunesData.results.filter(r => r.wrapperType === 'track');
               
+              // Se iTunes restituisce un singolo ma omette i track data, forziamo il brano usando i dati della collection
+              if (tracce.length === 0 && albumInfo) {
+                  tracce.push({
+                      trackId: albumInfo.collectionId,
+                      trackName: albumInfo.collectionName.replace(/ - Single$/i, ''),
+                      trackNumber: 1,
+                      trackTimeMillis: 0,
+                      previewUrl: null,
+                      artistName: albumInfo.artistName
+                  });
+              }
+
               const coverUrl = albumInfo ? albumInfo.artworkUrl100.replace('100x100bb', '600x600bb') : '';
               
               return res.json({
@@ -558,26 +645,44 @@ app.get('/api/spotify/album', async (req, res) => {
   // Altrimenti procedi con la logica normale di Spotify
   try {
     const token = await getSpotifyToken();
-    const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+    let response = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
+    
+    // Gestione rigorosa del Rate Limit per evitare errori e loop infiniti
+    if (response.status === 429) {
+        let retryAfter = response.headers.get('Retry-After') || 2;
+        if (retryAfter > 3) {
+            return res.status(429).json({ error: 'Rate limit Spotify troppo lungo.' });
+        }
+        await new Promise(r => setTimeout(r, retryAfter * 1000));
+        response = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+    }
+
+    if (!response.ok) {
+        return res.status(response.status).json({ error: 'Errore API Spotify' });
+    }
+
     const data = await response.json();
     
+    // Uso dell'optional chaining rigoroso per prevenire property di undefined
     res.json({
       id: data.id,
       name: data.name,
-      cover: data.images.length > 0 ? data.images[0].url : '',
-      artist: data.artists[0].name,
-      release_date: data.release_date,
-      tracks: data.tracks.items.map(t => ({
+      cover: data?.images?.[0]?.url || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+      artist: data?.artists?.[0]?.name || 'Artista Sconosciuto',
+      release_date: data.release_date || '',
+      tracks: (data.tracks?.items || []).map(t => ({
         id: t.id,
         name: t.name,
-        preview_url: t.preview_url,
-        artist: t.artists.map(a => a.name).join(', ')
+        preview_url: t.preview_url || null,
+        artist: (t.artists || []).map(a => a.name).join(', ')
       }))
     });
   } catch (err) {
-    console.error(err);
+    console.error("Errore nel recupero dell'album Spotify:", err);
     res.status(500).json({ error: 'Errore nel recupero dell\'album' });
   }
 });
