@@ -109,7 +109,7 @@ app.get('/api/home-recommendations', async (req, res) => {
                     id: album.id,
                     title: album.name,
                     artist: artist.name,
-                    cover: album.images.length > 0 ? album.images[0].url : '',
+                    cover: album.images && album.images.length > 0 ? album.images[0].url : '',
                     type: 'album'
                 });
             }
@@ -125,12 +125,14 @@ app.get('/api/home-recommendations', async (req, res) => {
                 id: track.id,
                 title: track.name,
                 artist: artist.name,
-                cover: track.album.images.length > 0 ? track.album.images[0].url : '',
+                cover: track.album.images && track.album.images.length > 0 ? track.album.images[0].url : '',
                 type: 'track'
               });
             }
         }
       }
+      // Piccolo ritardo per evitare Rate Limit (Errore 429) di Spotify
+      await new Promise(r => setTimeout(r, 150));
     }
     
     if (recommendations.length > 0) {
@@ -370,7 +372,10 @@ app.get('/api/spotify/artist', async (req, res) => {
             let itemArtistLower = item.artistName.toLowerCase();
             let targetArtistLower = artistName.toLowerCase();
             
-            let isPrimary = itemArtistLower === targetArtistLower;
+            // Se l'artista target è il primo nominato, consideralo un suo album principale
+            let isPrimary = itemArtistLower === targetArtistLower || 
+                            itemArtistLower.startsWith(targetArtistLower + " &") || 
+                            itemArtistLower.startsWith(targetArtistLower + ",");
             
             // Se l'ID di iTunes NON coincide col VERO artista, scartalo categoricamente per evitare omonimie
             if (trueItunesArtistId && item.artistId !== trueItunesArtistId) {
@@ -404,7 +409,14 @@ app.get('/api/spotify/artist', async (req, res) => {
           if (!item || !item.artists) continue; // Previene crash TypeError
           // Verifica severa: l'artista è il PRIMO artista di questo album?
           let isPrimary = item.artists.length > 0 && item.artists[0].id === spotifyArtistId;
-          let computedGroup = item.album_group || (isPrimary ? item.album_type : 'appears_on');
+          
+          let computedGroup = item.album_group;
+          if (isPrimary && computedGroup === 'appears_on') {
+              // Correggi l'errore di Spotify che a volte mette i colab in appears_on
+              computedGroup = item.album_type;
+          } else if (!computedGroup) {
+              computedGroup = isPrimary ? item.album_type : 'appears_on';
+          }
 
           if (computedGroup === 'appears_on' || !isPrimary) {
               // È un featuring, salviamo l'id dell'album per cercare le singole tracce dopo
