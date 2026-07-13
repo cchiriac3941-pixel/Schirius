@@ -24,6 +24,7 @@ async function fetchFeaturedData() {
         }
 
         if (heroItem) {
+            heroContainer.className = 'liquid-featured-card p-5 rounded-4 position-relative overflow-hidden text-center';
             heroContainer.innerHTML = `
                 <div class="row align-items-center text-start">
                   <div class="col-md-4 mb-4 mb-md-0 position-relative">
@@ -54,7 +55,7 @@ async function fetchFeaturedData() {
             const col = document.createElement('div');
             col.className = 'col-12 col-md-6 col-lg-6';
             col.innerHTML = `
-              <div class="music-card glass p-4 rounded-3 shadow-sm h-100 cursor-pointer transition-all hover-lift position-relative" onclick="window.location.href='album-detail.html?id=${item.id}'">
+              <div class="liquid-featured-card p-4 h-100 position-relative" onclick="window.location.href='album-detail.html?id=${item.id}'">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px; border-radius: 12px; font-weight: 800; font-size: 1.2rem;">${item.rank || (index + 1)}</div>
                   <img src="${item.cover}" alt="Track" class="rounded-3 shadow-sm" style="width: 65px; height: 65px; object-fit: cover;">
@@ -78,3 +79,15 @@ async function fetchFeaturedData() {
         top10Container.innerHTML = '';
     }
 }
+
+// Global Liquid Hover Event Listener per aggiornare il gradiente
+document.addEventListener('mousemove', (e) => {
+    document.querySelectorAll('.liquid-featured-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
+

@@ -9,9 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let fallbackName = params.get('name') || params.get('artist'); 
         
         document.getElementById('artist-name').innerHTML = '<div class="skeleton skeleton-text" style="width: 50%;"></div>';
-        const artistImg = document.getElementById('artist-img');
-
-        // Se non c'è l'ID, cerchiamolo tramite l'API di ricerca (per evitare nomi testuali al backend)
+        const artistBannerBg = document.getElementById('artist-banner-bg');
         if (!artistId && fallbackName) {
             console.log("⚠️ Passato nome ma non ID. Cerco l'ID univoco per: ", fallbackName);
             try {
@@ -42,12 +40,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 artistNameEl.textContent = data.artistName || fallbackName || "Artista Sconosciuto";
             }
             
+            const artistAvatarEl = document.getElementById('artist-avatar');
+            if (artistAvatarEl && data.artistImage) {
+                artistAvatarEl.src = data.artistImage;
+                artistAvatarEl.style.display = 'block';
+            }
+            
             const bioTesto = data.bio || "Nessuna biografia disponibile per questo artista.";
             const canzoni = data.canzoni || [];
 
             const artistBioEl = document.getElementById('artist-bio');
             if (artistBioEl) {
-                artistBioEl.innerHTML = bioTesto.replace(/\n/g, '<br>');
+                // Sottotitolo pulito con contatore brani e bio
+                artistBioEl.innerHTML = `<span style="opacity: 0.6; font-weight: 400;">${canzoni.length} Brani disponibili</span><br><br>` + bioTesto.replace(/\n/g, '<br>');
                 
                 if (bioTesto.length > 150) {
                     artistBioEl.style.display = '-webkit-box';
@@ -97,39 +102,63 @@ document.addEventListener('DOMContentLoaded', () => {
             let haSingoli = false;
             let haFeaturing = false;
 
-            // FOTO PROFILO E PLACEHOLDER
-            if (artistImg) {
-                artistImg.src = data.artistImage || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
-                artistImg.style.display = 'block';
+            // FOTO PROFILO E PLACEHOLDER (Ora gestita nel banner parallax)
+            if (artistBannerBg) {
+                artistBannerBg.style.backgroundImage = `url('${data.artistImage || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}')`;
             }
 
             if (canzoni && canzoni.length > 0) {
                 // Crea le card
+                let trackIndex = 1;
                 canzoni.forEach(canzione => {
+                    const isFeaturing = canzione.album_group === 'appears_on';
+                    // Salta se abbiamo già 10 featuring (Top 10)
+                    if (isFeaturing && trackIndex > 10) return;
+                    
                     const card = document.createElement('a');
-                    // Il link ora va alla pagina dell'album usando un percorso relativo
                     card.href = `album-detail.html?id=${canzione.id}`;
-                    card.className = 'release-card';
                     
                     const releaseDate = canzione.release_date ? `<p style="font-size: 0.75rem; color: #3b82f6; margin-top: 0.2rem;">${canzione.release_date.split('-')[0]}</p>` : '';
                     
-                    card.innerHTML = `
-                        <img src="${canzione.copertina}" alt="${canzione.titolo}">
-                        <h4>${canzione.titolo}</h4>
-                        <p>${canzione.artista}</p>
-                        ${releaseDate}
-                    `;
-                    
-                    // SMISTAMENTO (Spotify ci da 'album', 'single', 'appears_on')
-                    if (canzione.album_group === 'appears_on') {
+                    if (isFeaturing) {
+                        // Stile riga verticale (iOS List)
+                        card.className = 'ios-list-row';
+                        card.innerHTML = `
+                            <div class="row-left">
+                                <span class="row-number">${trackIndex}</span>
+                                <img src="${canzione.copertina}" alt="${canzione.titolo}" class="row-cover">
+                                <div class="row-info">
+                                    <h4 class="row-title">${canzione.titolo}</h4>
+                                    <p class="row-artist">${canzione.artista}</p>
+                                </div>
+                            </div>
+                            <div class="row-right">
+                                <span class="row-icon">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+                                </span>
+                            </div>
+                        `;
                         if (featuringContainer) featuringContainer.appendChild(card);
                         haFeaturing = true;
-                    } else if (canzione.album_group === 'album') {
-                        if (albumsContainer) albumsContainer.appendChild(card);
-                        haAlbums = true;
+                        trackIndex++;
                     } else {
-                        if (singlesContainer) singlesContainer.appendChild(card);
-                        haSingoli = true;
+                        // Stile card quadrata orizzontale
+                        card.className = 'liquid-featured-card release-card d-block text-decoration-none p-3';
+                        card.innerHTML = `
+                            <div class="card-image-wrapper">
+                                <img src="${canzione.copertina}" alt="${canzione.titolo}">
+                            </div>
+                            <h4>${canzione.titolo}</h4>
+                            <p>${canzione.artista}</p>
+                            ${releaseDate}
+                        `;
+                        if (canzione.album_group === 'album') {
+                            if (albumsContainer) albumsContainer.appendChild(card);
+                            haAlbums = true;
+                        } else {
+                            if (singlesContainer) singlesContainer.appendChild(card);
+                            haSingoli = true;
+                        }
                     }
                 });
 
@@ -149,6 +178,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     initArtist();
+
+    // Effetto Parallasse sul Banner Artista
+    window.addEventListener('scroll', () => {
+        const bg = document.getElementById('artist-banner-bg');
+        if (bg) {
+            const scrollY = window.scrollY;
+            // Sposta l'immagine verso il basso a metà della velocità di scorrimento
+            bg.style.transform = `translateY(${scrollY * 0.5}px) scale(${1 + scrollY * 0.001})`;
+        }
+    });
 });
 
 window.handleSearch = function() {

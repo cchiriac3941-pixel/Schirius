@@ -720,3 +720,70 @@ p {
 }
 
 /* Old mobile-top-nav removed. Unified ios-header handles everything now. */
+
+/* ============================================================
+   LIQUID GLASS FEATURED CARD (Hover radial glow)
+   ============================================================ */
+.liquid-featured-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(30, 30, 30, 0.4);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.liquid-featured-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 15px 40px rgba(176, 38, 255, 0.25);
+}
+
+:root[data-theme="light"] .liquid-featured-card {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="light"] .liquid-featured-card:hover {
+  box-shadow: 0 15px 40px rgba(176, 38, 255, 0.1);
+}
+
+.liquid-featured-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  padding: 2px; /* width of the glow border */
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(176, 38, 255, 0.4),
+    transparent 40%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.liquid-featured-card:hover::before {
+  opacity: 1;
+}
+
+:root[data-theme="light"] .liquid-featured-card::before {
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(176, 38, 255, 0.2),
+    transparent 40%
+  );
+}
+
+.liquid-featured-card:active {
+  transform: scale(0.96);
+}

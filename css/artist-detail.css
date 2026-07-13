@@ -1,104 +1,228 @@
 /* =========================================
-   GLI STILI BASE ORA EREDITANO DA BASE.CSS
-   (Sfondi, font, colori e navbar sono gestiti centralmente)
+   HEADER ARTISTA (Apple Music Style Parallax)
    ========================================= */
-
-/* =========================================
-   HEADER ARTISTA (Stile Apple)
-   ========================================= */
-.artist-header {
-    background: transparent;
-    border: none;
-    padding: 2.5rem 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 2.5rem;
-    margin-bottom: 2rem;
+.ios-artist-banner-container {
     position: relative;
+    width: 100%;
+    height: 60vh;
+    min-height: 400px;
     overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 2rem;
 }
 
-/* Rimosso bagliore dietro la foto per mantenere stile Apple pulito */
-.artist-header::before {
-    display: none;
+.ios-artist-banner-bg {
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 120%;
+    height: 140%;
+    background-size: cover;
+    background-position: center 30%;
+    z-index: 0;
+    will-change: transform;
 }
 
-.profile-small {
-    width: 160px;
-    height: 160px;
+.ios-artist-banner-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Gradiente radiale / lineare dinamico per farsi sfumare col tema */
+    background: linear-gradient(to top, var(--bg-color) 0%, rgba(0,0,0,0) 60%);
+}
+
+.ios-artist-banner-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 2rem;
+    padding-bottom: 3rem;
+    text-align: left;
+    background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+:root[data-theme="light"] .ios-artist-banner-content {
+    background: linear-gradient(to top, rgba(255,255,255,0.4), transparent);
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.artist-avatar-premium {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-    z-index: 1;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(0,0,0,0.2);
+    flex-shrink: 0;
 }
 
-.artist-info {
-    z-index: 1;
+:root[data-theme="light"] .artist-avatar-premium {
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+.monumental-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    color: #fff;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+:root[data-theme="light"] .monumental-title {
+    color: #111;
+    text-shadow: 0 4px 30px rgba(255,255,255,0.8);
+}
+
+.artist-subtitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    margin-top: 0.5rem;
+    max-width: 800px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+:root[data-theme="light"] .artist-subtitle {
+    color: rgba(0,0,0,0.7);
+    text-shadow: none;
+}
+
+/* =========================================
+   SCROLL ORIZZONTALE (Album/Singoli)
+   ========================================= */
+.ios-grid-horizontal {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem; /* Per scrollbar */
+    -webkit-overflow-scrolling: touch;
+}
+
+.ios-grid-horizontal .release-card {
+    flex: 0 0 180px;
+    scroll-snap-align: start;
+}
+
+/* =========================================
+   LISTA VERTICALE APPLE MUSIC (Featuring/Top)
+   ========================================= */
+.ios-list-vertical {
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
-.artist-info h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    letter-spacing: -0.5px;
+.ios-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.artist-info p {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #a0a8b5 !important; /* Grigio chiaro per la bio */
+:root[data-theme="light"] .ios-list-row {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.ios-list-row:last-child {
+    border-bottom: none;
+}
+
+.ios-list-row:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+:root[data-theme="light"] .ios-list-row:hover {
+    background-color: rgba(0,0,0,0.03);
+}
+
+.row-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.row-number {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    min-width: 20px;
+    text-align: right;
+}
+
+.row-cover {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.row-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.row-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
     margin: 0;
 }
 
-/* =========================================
-   GRIGLIA DELLE CANZONI (Artist Releases)
-   ========================================= */
-.artist-releases {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
-}
-
-/* Le card degli album e singoli ora ereditano interamente lo stile da base.css (.release-card) */
-
-/* =========================================
-   SEZIONE TITOLI E TESTI
-   ========================================= */
-.eyebrow {
+.row-artist {
     font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 600;
+    color: var(--text-muted);
+    margin: 0;
 }
 
-.section-title {
-    font-weight: 700;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 0.5rem;
-    display: inline-block;
+.row-icon svg {
+    color: var(--text-muted);
+    transition: color 0.3s;
+}
+
+.ios-list-row:hover .row-icon svg {
+    color: var(--text);
 }
 
 /* =========================================
-   MEDIA QUERIES (Per l'adattamento sui telefoni)
+   MEDIA QUERIES
    ========================================= */
 @media (max-width: 768px) {
-    .artist-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+    .ios-artist-banner-container {
+        height: 50vh;
+        min-height: 350px;
+    }
+    
+    .monumental-title {
+        font-size: 2.8rem;
+    }
+    
+    .ios-artist-banner-content {
         padding: 1.5rem;
+        padding-bottom: 2rem;
     }
     
-    .artist-info h2 {
-        font-size: 2rem;
-    }
-    
-    .artist-releases {
-        grid-template-columns: repeat(2, 1fr); /* 2 colonne sui telefoni */
-        gap: 1rem;
+    .ios-grid-horizontal .release-card {
+        flex: 0 0 140px;
     }
 }

@@ -38,15 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderHomeData(recommendations) {
         // Il primo elemento è l'Album (Hero), i restanti 4 sono Singoli (Grid)
-        const heroItem = recommendations.length > 0 ? recommendations[0] : null;
         
         // Render Hero (Album Consigliato)
         const heroContainer = document.getElementById('recommended-album-container');
-        if (heroContainer && heroItem) {
+        if (heroContainer && recommendations.length > 0) {
+            const heroItem = recommendations[0];
             heroContainer.innerHTML = `
                 <h2 class="h4 mb-4 fw-bold">Album Consigliato</h2>
                 <a href="pages/album-detail.html?id=${heroItem.id}&name=${encodeURIComponent(heroItem.title)}" class="text-decoration-none">
-                    <div class="hero-card overflow-hidden d-flex flex-column flex-md-row text-center text-md-start" style="transition: transform 0.25s ease;">
+                    <div class="liquid-featured-card p-0 overflow-hidden d-flex flex-column flex-md-row text-center text-md-start" style="min-height: 300px;">
                         <img src="${heroItem.cover}" alt="${heroItem.title}" class="img-fluid" style="width: 100%; max-width: 350px; object-fit: cover;">
                         <div class="p-4 p-md-5 d-flex flex-column justify-content-center w-100">
                             <span class="badge rounded-pill bg-accent bg-opacity-75 text-white align-self-center align-self-md-start mb-3 px-3 py-2">In Evidenza</span>
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     col.className = 'col-6 col-md-3 mb-4';
                     // Indirizza alla pagina album-detail dato che l'API ora restituisce l'id dell'album/singolo
                     col.innerHTML = `
-                        <a href="pages/album-detail.html?id=${single.id}&name=${encodeURIComponent(single.title)}" class="release-card h-100 recommendation-card">
+                        <a href="pages/album-detail.html?id=${single.id}&name=${encodeURIComponent(single.title)}" class="liquid-featured-card release-card h-100 recommendation-card d-block text-decoration-none">
                             <div class="position-relative">
                                 <img src="${single.cover}" alt="${single.title}" loading="lazy">
                                 <div class="play-overlay">
