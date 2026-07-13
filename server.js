@@ -96,20 +96,39 @@ app.get('/api/home-recommendations', async (req, res) => {
       if (searchData.artists && searchData.artists.items && searchData.artists.items.length > 0) {
         const artist = searchData.artists.items[0];
         
-        const topTracksRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=IT`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const topTracksData = await topTracksRes.json();
+        let isHero = recommendations.length === 0;
         
-        if (topTracksData.tracks && topTracksData.tracks.length > 0) {
-          const track = topTracksData.tracks[0];
-          recommendations.push({
-            id: track.id,
-            title: track.name,
-            artist: artist.name,
-            cover: track.album.images.length > 0 ? track.album.images[0].url : '',
-            type: 'track'
-          });
+        if (isHero) {
+            const albumsRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album,single&limit=1`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const albumsData = await albumsRes.json();
+            if (albumsData.items && albumsData.items.length > 0) {
+                const album = albumsData.items[0];
+                recommendations.push({
+                    id: album.id,
+                    title: album.name,
+                    artist: artist.name,
+                    cover: album.images.length > 0 ? album.images[0].url : '',
+                    type: 'album'
+                });
+            }
+        } else {
+            const topTracksRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/top-tracks?market=IT`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const topTracksData = await topTracksRes.json();
+            
+            if (topTracksData.tracks && topTracksData.tracks.length > 0) {
+              const track = topTracksData.tracks[0];
+              recommendations.push({
+                id: track.id,
+                title: track.name,
+                artist: artist.name,
+                cover: track.album.images.length > 0 ? track.album.images[0].url : '',
+                type: 'track'
+              });
+            }
         }
       }
     }
