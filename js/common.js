@@ -209,31 +209,89 @@ window.handleSearch = async function() {
 
 
 // ==========================================
-// PAGE TRANSITIONS (iOS 26)
+// LIQUID GLASS NAV ENGINE (iOS 26)
 // ==========================================
-function setupPageTransitions() {
-    document.body.classList.add('page-transition');
-    
-    // Add entered state slightly after load
-    setTimeout(() => {
-        document.body.classList.add('page-entered');
-    }, 50);
+function setupLiquidNav() {
+    const containers = [
+        { parent: document.querySelector('.ios-nav-links'), items: document.querySelectorAll('.ios-nav-links a') },
+        { parent: document.querySelector('.bottom-inner'), items: document.querySelectorAll('.bottom-nav .nav-link') }
+    ];
 
-    // Fade out on link click
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            if (href && !href.startsWith('#') && !link.hasAttribute('target')) {
+    containers.forEach(({ parent, items }) => {
+        if (!parent || items.length === 0) return;
+
+        // Inietta l'indicatore liquido
+        const indicator = document.createElement('div');
+        indicator.className = 'liquid-indicator';
+        parent.appendChild(indicator);
+
+        // Posizione iniziale
+        const activeItem = Array.from(items).find(item => item.classList.contains('active')) || items[0];
+        
+        function updateIndicator(target, animate = true) {
+            if (!target) return;
+            const targetRect = target.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            
+            // Per permettere l'effetto "stretch", non usiamo solo la width, ma gestiamo offset
+            const left = targetRect.left - parentRect.left;
+            const width = targetRect.width;
+
+            if (!animate) indicator.style.transition = 'none';
+            else indicator.style.transition = 'all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6)';
+
+            indicator.style.left = `${left}px`;
+            indicator.style.width = `${width}px`;
+        }
+
+        // Posiziona all'avvio senza animazione
+        updateIndicator(activeItem, false);
+        window.addEventListener('resize', () => updateIndicator(parent.querySelector('.active'), false));
+
+        // Gestione clic (Liquid slide + squeeze prima del cambio pagina)
+        items.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (!href || href.startsWith('#') || link.hasAttribute('target')) return;
+                
                 e.preventDefault();
-                document.body.classList.remove('page-entered');
+                
+                // Rimuove active vecchio, aggiunge nuovo
+                items.forEach(i => i.classList.remove('active'));
+                link.classList.add('active');
+
+                // Anima l'indicatore
+                updateIndicator(link, true);
+
+                // Effetto squeeze (micro-aptico)
+                link.style.transform = 'scale(0.92)';
+                indicator.style.transform = 'scale(0.92)';
+                setTimeout(() => {
+                    link.style.transform = '';
+                    indicator.style.transform = '';
+                }, 150);
+
+                // Attendi che l'animazione Liquid Glass finisca prima di saltare
                 setTimeout(() => {
                     window.location.href = href;
-                }, 400); // Wait for transition
-            }
+                }, 300);
+            });
         });
     });
 }
-window.addEventListener('DOMContentLoaded', setupPageTransitions);
+
+// ==========================================
+// PAGE TRANSITIONS (Removed as requested)
+// ==========================================
+function setupPageTransitions() {
+    // Transizioni annullate
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    setupPageTransitions();
+    setTimeout(setupLiquidNav, 100); // Aspetta che il layout sia stabile
+});
+
 
 // ==========================================
 // GLOBAL IMAGE ERROR FALLBACK (Apple Empty State)

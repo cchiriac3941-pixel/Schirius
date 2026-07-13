@@ -119,17 +119,54 @@ a:active:not(.brand-logo), button:active, .btn:active, .card:active {
 }
 
 /* ============================================================
-   PAGE TRANSITIONS
+   LIQUID GLASS INDICATOR
    ============================================================ */
-.page-transition {
-  opacity: 0;
-  transform: scale(0.98);
-  transition: opacity 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1), transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+.liquid-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(176, 38, 255, 0.25); /* Sfondo viola elettrico luminoso */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 50px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 0 20px rgba(176, 38, 255, 0.5); /* Specular highlight & glow posteriore */
+  z-index: 0;
+  pointer-events: none; /* Ignora i clic */
+  transition: all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  transform-origin: center;
 }
 
-.page-transition.page-entered {
+.nav-link, .bottom-nav .nav-link, .search-button {
+  color: var(--text-muted);
+  opacity: 0.7;
+  transition: color 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
+}
+
+.nav-link:hover, .bottom-nav .nav-link:hover, .search-button:hover {
+  opacity: 0.9;
+}
+
+.nav-link.active, .search-button.active, .search-button:active {
+  color: #ffffff !important; /* Testo bianco sull'indicatore viola */
+  font-weight: 600;
   opacity: 1;
-  transform: scale(1);
+}
+
+:root[data-theme="light"] .nav-link.active, 
+:root[data-theme="light"] .search-button.active, 
+:root[data-theme="light"] .search-button:active {
+  color: #1d1d1f !important; /* Testo nero intenso in Light Mode */
+}
+
+/* Container relativo per l'indicatore in desktop */
+.ios-nav-links {
+  position: relative;
+}
+
+/* Container relativo per l'indicatore in mobile */
+.bottom-inner {
+  position: relative;
 }
 
 /* ============================================================
@@ -255,11 +292,13 @@ p {
 }
 
 @media (max-width: 800px) {
+  .ios-header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .ios-nav-links {
     display: none;
-  }
-  .ios-header-inner {
-    grid-template-columns: 1fr auto;
   }
 }
 
@@ -479,6 +518,12 @@ p {
   padding: 10px 8px;
 }
 
+@media (max-width: 800px) {
+  .bottom-nav {
+    display: block;
+  }
+}
+
 .bottom-nav .bottom-inner {
   display: flex;
   flex-direction: row;
@@ -527,7 +572,7 @@ p {
 }
 
 .bottom-nav .nav-link.active, .bottom-nav .search-button:active {
-  color: var(--accent) !important;
+  /* Rimosso var(--accent) per ereditare i nuovi stili di contrasto globale (Bianco/Nero) */
 }
 
 .bottom-nav .search-button::after {
