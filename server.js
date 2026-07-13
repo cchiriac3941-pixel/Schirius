@@ -160,6 +160,146 @@ app.get('/api/home-recommendations', async (req, res) => {
   }
 });
 
+let featuredContentCache = null;
+let featuredContentCacheTime = 0;
+
+app.get('/api/featured-content', async (req, res) => {
+    // Cache di 1 ora per proteggere le quote API
+    if (featuredContentCache && Date.now() - featuredContentCacheTime < 3600000) {
+        return res.json(featuredContentCache);
+    }
+    
+    try {
+        const token = await getSpotifyToken();
+        
+        const SUPPORTED_ARTISTS = [
+            "Lazza", "Sfera Ebbasta", "Shiva", "Capo Plaza", "Artie 5ive", "Kid Yugi", 
+            "Tony Boy", "Geolier", "Tedua", "Guè", "Marracash", "Salmo"
+        ];
+        
+        // 1. Simula Top 10 FIMI unendo e ordinando per popolarità i Top Tracks dei 5 "Big"
+        const FIMI_ARTISTS = ["Sfera Ebbasta", "Lazza", "Geolier", "Shiva", "thasup"];
+        let allTopTracks = [];
+        
+        for (const artistName of FIMI_ARTISTS) {
+            try {
+                // Spotify Top Tracks dà 403, quindi usiamo la search per traccia
+                const searchRes = await fetch(`https://api.spotify.com/v1/search?q=artist:${encodeURIComponent(artistName)}&type=track&limit=5`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (searchRes.ok) {
+                    const topData = await searchRes.json();
+                    if (topData.tracks && topData.tracks.items.length > 0) {
+                        const tracks = topData.tracks.items.map(track => ({
+                            id: track.album.id, 
+                            track_id: track.id,
+                            title: track.name,
+                            artist: track.artists.map(a => a.name).join(', '),
+                            cover: track.album.images.length > 0 ? track.album.images[0].url : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
+                            popularity: track.popularity
+                        }));
+                        allTopTracks = allTopTracks.concat(tracks);
+                    }
+                }
+            } catch(e) {
+                console.error("Errore fetch top tracks FIMI for " + artistName, e);
+            }
+            await new Promise(r => setTimeout(r, 50));
+        }
+        
+        allTopTracks.sort((a, b) => b.popularity - a.popularity);
+        let uniqueTracks = [];
+        let seenIds = new Set();
+        for (const t of allTopTracks) {
+            if (!seenIds.has(t.track_id)) {
+                seenIds.add(t.track_id);
+                uniqueTracks.push(t);
+            }
+        }
+        let top10Tracks = uniqueTracks.slice(0, 10).map((t, i) => {
+            t.rank = i + 1;
+            return t;
+        });
+
+        // 2. Trova l'album/singolo più recente tra gli artisti del roster
+        const shuffled = [...SUPPORTED_ARTISTS].sort(() => 0.5 - Math.random());
+        // Riduciamo a 4 artisti per non esplodere i rate limit (Spotify limita a raffiche brevi)
+        const selectedArtists = shuffled.slice(0, 4);
+        
+        let latestReleases = [];
+        
+        for (const artistName of selectedArtists) {
+            try {
+                const searchRes = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (searchRes.status === 429) {
+                    await new Promise(r => setTimeout(r, 1000));
+                    continue;
+                }
+                const searchData = await searchRes.json();
+                
+                if (searchData.artists && searchData.artists.items.length > 0) {
+                    const artist = searchData.artists.items[0];
+                    const albumsRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album,single&limit=1`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (albumsRes.status === 429) {
+                        await new Promise(r => setTimeout(r, 1000));
+                        continue;
+                    }
+                    
+                    if (albumsRes.ok) {
+                        const albumsData = await albumsRes.json();
+                        if (albumsData.items && albumsData.items.length > 0) {
+                            latestReleases.push({
+                                id: albumsData.items[0].id,
+                                title: albumsData.items[0].name,
+                                artist: artist.name,
+                                cover: albumsData.items[0].images?.[0]?.url,
+                                release_date: albumsData.items[0].release_date
+                            });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Errore fetch newest for " + artistName, e);
+            }
+            await new Promise(r => setTimeout(r, 150)); 
+        }
+        
+        // Ordina per release_date decrescente
+        latestReleases.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+        
+        const latestRelease = latestReleases.length > 0 ? latestReleases[0] : null;
+        
+        const finalData = {
+            latestRelease: latestRelease,
+            top10: top10Tracks
+        };
+        
+        // Aggiorna Cache se la Top 10 ha almeno elementi
+        if (top10Tracks.length > 0) {
+            featuredContentCache = finalData;
+            featuredContentCacheTime = Date.now();
+        }
+        
+        res.json(finalData);
+        
+    } catch (err) {
+        console.error("Errore featured-content:", err);
+        // Dati Fallback d'emergenza
+        res.json({
+            latestRelease: { id: "1668997865", title: "Cenere", artist: "Lazza", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/bc/9f/95/bc9f95f4-3ea3-9d48-356a-2dfcd7fcceb2/23UMGIM08249.rgb.jpg/600x600bb.jpg" },
+            top10: [
+                { id: "1440864547", title: "Visiera A Becco", artist: "Sfera Ebbasta", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/ac/b7/21/acb72195-e5bf-f6bd-5f1e-e886ea1cb6e7/00602557145502.rgb.jpg/600x600bb.jpg", rank: 1 }
+            ]
+        });
+    }
+});
+
 app.get('/api/search-artist', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Manca parametro q' });
