@@ -104,7 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // FOTO PROFILO E PLACEHOLDER (Ora gestita nel banner parallax)
             if (artistBannerBg) {
-                artistBannerBg.style.backgroundImage = `url('${data.artistImage || "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"}')`;
+                if (data.artistImage) {
+                    artistBannerBg.style.backgroundImage = `url('${data.artistImage}')`;
+                } else {
+                    // Nessuna immagine disponibile: usa un gradiente o lascialo vuoto
+                    artistBannerBg.style.background = 'linear-gradient(45deg, var(--surface), var(--surface-soft))';
+                }
             }
 
             if (canzoni && canzoni.length > 0) {
@@ -116,9 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (isFeaturing && trackIndex > 10) return;
                     
                     const card = document.createElement('a');
-                    card.href = `album-detail.html?id=${canzione.id}`;
+                    if (canzione.track_id) {
+                        card.href = `lyrics.html?id=${canzione.track_id}`;
+                    } else {
+                        card.href = `album-detail.html?id=${canzione.id}`;
+                    }
                     
-                    const releaseDate = canzione.release_date ? `<p style="font-size: 0.75rem; color: #3b82f6; margin-top: 0.2rem;">${canzione.release_date.split('-')[0]}</p>` : '';
+                    const releaseDate = canzione.release_date ? `<p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">${canzione.release_date.split('-')[0]}</p>` : '';
                     
                     if (isFeaturing) {
                         // Stile riga verticale (iOS List)

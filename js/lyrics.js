@@ -38,6 +38,66 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.preview_url) {
                 audioPlayer.src = data.preview_url;
                 audioWrapper.style.display = 'block';
+            // CUSTOM AUDIO PLAYER LOGIC
+            const customPlayBtn = document.getElementById('custom-play-btn');
+            const iconPlay = document.getElementById('icon-play');
+            const iconPause = document.getElementById('icon-pause');
+            const progressBg = document.getElementById('progress-bg');
+            const progressFill = document.getElementById('progress-fill');
+            const timeCurrent = document.getElementById('time-current');
+            
+            if (customPlayBtn && audioPlayer) {
+                // Formatting time helpers
+                const formatTime = (seconds) => {
+                    if (isNaN(seconds)) return "0:00";
+                    const m = Math.floor(seconds / 60);
+                    const s = Math.floor(seconds % 60);
+                    return m + ":" + (s < 10 ? "0" : "") + s;
+                };
+
+                // Play / Pause toggle
+                customPlayBtn.addEventListener('click', () => {
+                    if (audioPlayer.paused) {
+                        audioPlayer.play();
+                    } else {
+                        audioPlayer.pause();
+                    }
+                });
+
+                // Update UI on play/pause
+                audioPlayer.addEventListener('play', () => {
+                    iconPlay.style.display = 'none';
+                    iconPause.style.display = 'block';
+                });
+
+                audioPlayer.addEventListener('pause', () => {
+                    iconPlay.style.display = 'block';
+                    iconPause.style.display = 'none';
+                });
+
+                // Update progress bar
+                audioPlayer.addEventListener('timeupdate', () => {
+                    if (!audioPlayer.duration) return;
+                    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    progressFill.style.width = percent + '%';
+                    timeCurrent.textContent = formatTime(audioPlayer.currentTime);
+                });
+
+                // Seek functionality
+                if (progressBg) {
+                    progressBg.addEventListener('click', (e) => {
+                        const rect = progressBg.getBoundingClientRect();
+                        const clickX = e.clientX - rect.left;
+                        const width = rect.width;
+                        const percentage = clickX / width;
+                        
+                        if (audioPlayer.duration) {
+                            audioPlayer.currentTime = percentage * audioPlayer.duration;
+                        }
+                    });
+                }
+            }
+
             } else {
                 audioWrapper.innerHTML = '<p class="text-white-50 mt-3">Anteprima audio non disponibile per questa traccia.</p>';
                 audioWrapper.style.display = 'block';

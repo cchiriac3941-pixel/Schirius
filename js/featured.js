@@ -55,12 +55,12 @@ async function fetchFeaturedData() {
             const col = document.createElement('div');
             col.className = 'col-12 col-md-6 col-lg-6';
             col.innerHTML = `
-              <div class="liquid-featured-card p-4 h-100 position-relative" onclick="window.location.href='album-detail.html?id=${item.id}'">
+              <div class="liquid-featured-card p-4 h-100 position-relative" onclick="window.location.href='lyrics.html?id=${item.track_id}'">
                 <div class="d-flex align-items-center mb-3">
                   <div class="rank-badge bg-gradient me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 45px; height: 45px; border-radius: 12px; font-weight: 800; font-size: 1.2rem;">${item.rank || (index + 1)}</div>
                   <img src="${item.cover}" alt="Track" class="rounded-3 shadow-sm" style="width: 65px; height: 65px; object-fit: cover;">
                 </div>
-                <h5 class="mb-1 text-truncate" title="${item.title}"><a href="album-detail.html?id=${item.id}" class="text-white text-decoration-none stretched-link fw-bold">${item.title}</a></h5>
+                <h5 class="mb-1 text-truncate" title="${item.title}"><a href="lyrics.html?id=${item.track_id}" class="text-white text-decoration-none stretched-link fw-bold">${item.title}</a></h5>
                 <p class="text-white-50 small mb-3 text-truncate" title="${item.artist}">${item.artist}</p>
                 <div class="d-flex justify-content-between align-items-center mt-auto">
                   <span class="badge" style="background: rgba(255,255,255,0.1); color: #e9d5ff;">Top 50 Italia</span>

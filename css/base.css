@@ -40,6 +40,26 @@
   --shadow-color: rgba(0, 0, 0, 0.08);
 }
 
+/* ============================================================
+   BOOTSTRAP COLOR OVERRIDES FOR LIGHT THEME
+   ============================================================ */
+:root[data-theme="light"] .text-white {
+  color: var(--text) !important;
+}
+
+:root[data-theme="light"] .text-white-50 {
+  color: var(--text-muted) !important;
+}
+
+:root[data-theme="light"] .text-white-75 {
+  color: var(--text) !important;
+  opacity: 0.75 !important;
+}
+
+:root[data-theme="light"] .border-white {
+  border-color: var(--border) !important;
+}
+
 /* Icone sottili in stile SF Symbols */
 svg {
   stroke-width: 1.2 !important;
@@ -106,7 +126,50 @@ body::before {
    GLOBAL iOS 26 FLUID ANIMATIONS & GLOWS
    ============================================================ */
 a, button, .btn, .card, .hero-card, .release-card, .artist-card, .ios-header, .bottom-nav, input, .search-button, svg, .nav-link, .theme-toggle-btn {
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ============================================================
+   RESPONSIVE MOBILE iOS 26 (Media Queries)
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Riduciamo i padding delle card in Liquid Glass per non sprecare spazio */
+  .liquid-featured-card {
+    padding: 1.25rem !important; /* Meno padding interno rispetto ai desktop */
+  }
+
+  /* Ottimizzazione dei margini laterali per container e sezioni principali */
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .ios-header {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Riduzione degli spazi verticali Bootstrap su mobile per evitare overflow/scroll */
+  .py-5 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  
+  .pt-5 {
+    padding-top: 1.5rem !important;
+  }
+  
+  .mt-5 {
+    margin-top: 1.5rem !important;
+  }
+  
+  .mb-5 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .gap-4 {
+    gap: 1rem !important;
+  }
 }
 
 a:hover:not(.brand-logo):not(.nav-link), button:hover:not(.theme-toggle-btn), .btn:hover, .card:hover, .hero-card:hover, .release-card:hover, .artist-card:hover {
@@ -140,6 +203,8 @@ a:active:not(.brand-logo), button:active, .btn:active, .card:active {
 .nav-link, .bottom-nav .nav-link, .search-button {
   color: var(--text-muted);
   opacity: 0.7;
+  position: relative;
+  z-index: 1;
   transition: color 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) !important;
 }
 
@@ -274,13 +339,23 @@ p {
   font-size: 0.95rem;
   padding: 0.4rem 0.8rem;
   border-radius: 99px;
+  position: relative;
+  z-index: 1;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.ios-nav-links a:hover,
-.ios-nav-links a.active {
+.ios-nav-links a:hover {
   color: var(--text);
   background: var(--surface-soft);
+}
+
+.ios-nav-links a.active {
+  color: #ffffff !important;
+  background: transparent;
+}
+
+:root[data-theme="light"] .ios-nav-links a.active {
+  color: #1d1d1f !important;
 }
 
 /* Actions - Right */
@@ -786,4 +861,45 @@ p {
 
 .liquid-featured-card:active {
   transform: scale(0.96);
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR (Premium iOS Style)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+:root[data-theme="light"] html {
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }

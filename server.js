@@ -357,6 +357,24 @@ app.get('/api/spotify/artist', async (req, res) => {
           const itunesData = await itunesRes.json();
           if (itunesData.results && itunesData.results.length > 0) {
               artistName = itunesData.results[0].artistName;
+              
+              // Tenta di recuperare l'immagine da Spotify usando il nome dell'artista
+              try {
+                  token = await getSpotifyToken();
+                  const spotifySearchRes = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`, {
+                      headers: { 'Authorization': `Bearer ${token}` }
+                  });
+                  if (spotifySearchRes.ok) {
+                      const sData = await spotifySearchRes.json();
+                      if (sData.artists && sData.artists.items.length > 0) {
+                          spotifyArtistId = sData.artists.items[0].id;
+                          artistImage = sData.artists.items[0].images && sData.artists.items[0].images.length > 0 ? sData.artists.items[0].images[0].url : '';
+                      }
+                  }
+              } catch(e) {
+                  console.error("Errore recupero immagine Spotify per iTunes ID", e);
+              }
+              
           } else {
               return res.status(404).json({ error: 'Artista non trovato su iTunes' });
           }
@@ -369,6 +387,19 @@ app.get('/api/spotify/artist', async (req, res) => {
           });
           
           if (spotifyRes.status === 429 || !spotifyRes.ok) {
+              // SCRAPE FALLBACK: Tentiamo di aggirare il blocco raschiando la pagina pubblica di Spotify!
+              try {
+                  const scrapeRes = await fetch(`https://open.spotify.com/artist/${artistId}`);
+                  if (scrapeRes.ok) {
+                      const html = await scrapeRes.text();
+                      const match = html.match(/<meta property="og:image" content="(.*?)"/);
+                      if (match && match[1]) {
+                          artistImage = match[1];
+                          console.log("🎯 Immagine Spotify recuperata via scraping per: " + artistId);
+                      }
+                  }
+              } catch (e) { console.error("Scraping fallback fallito", e); }
+
               if (req.query.name) {
                   console.log("⚠️ Spotify 429 su /artist, ma abbiamo il nome di salvataggio. Passo a iTunes per:", req.query.name);
                   artistName = req.query.name;
@@ -396,6 +427,12 @@ app.get('/api/spotify/artist', async (req, res) => {
                 const gArtistId = hit.result.primary_artist.id;
                 const gBioRes = await fetch(`https://api.genius.com/artists/${gArtistId}?text_format=plain`, { headers: { Authorization: `Bearer ${GENIUS_TOKEN}` } });
                 const gBioData = await gBioRes.json();
+                
+                // Fallback Immagine Artista: prendi la foto reale da Genius se Spotify ci blocca!
+                if (!artistImage && gBioData.response?.artist?.image_url) {
+                    artistImage = gBioData.response.artist.image_url;
+                }
+
                 let geniusBio = gBioData.response?.artist?.description?.plain || "";
                 if (geniusBio !== "?" && geniusBio.length > 50) {
                     bio = geniusBio;
@@ -532,7 +569,7 @@ app.get('/api/spotify/artist', async (req, res) => {
 
         Array.from(uniqueCollections.values()).forEach(item => {
             // Se l'ID di iTunes NON coincide col VERO artista, scartalo categoricamente per evitare omonimie
-            if (!trueItunesArtistId || item.artistId !== trueItunesArtistId) {
+            if (!trueItunesArtistId || item.artistId.toString() !== trueItunesArtistId.toString()) {
                 return;
             }
             
@@ -592,6 +629,7 @@ app.get('/api/spotify/artist', async (req, res) => {
                             visti.add(cleanTitle);
                             canzoni.push({
                                 id: song.collectionId ? song.collectionId.toString() : (song.trackId ? song.trackId.toString() : ""),
+                                track_id: song.trackId ? song.trackId.toString() : "",
                                 titolo: trackName,
                                 artista: song.artistName || "Sconosciuto",
                                 copertina: song.artworkUrl100 ? song.artworkUrl100.replace('100x100bb', '600x600bb') : 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
@@ -690,6 +728,7 @@ app.get('/api/spotify/artist', async (req, res) => {
                                             let trackGroup = (track.artists.length > 0 && track.artists[0].id === spotifyArtistId) ? 'single' : 'appears_on';
                                             canzoni.push({
                                                 id: album.id, // Usa l'id dell'album per aprire album-detail.html
+                                                track_id: track.id,
                                                 titolo: trackName,
                                                 artista: track.artists.map(a => a.name).join(', '),
                                                 copertina: album?.images?.[0]?.url || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
@@ -711,6 +750,15 @@ app.get('/api/spotify/artist', async (req, res) => {
 
     // Ordina tutto cronologicamente (più recenti prima)
     canzoni.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+
+    // Fallback Immagine Artista: se Spotify ci ha bloccato e l'immagine è vuota, 
+    // usiamo la copertina del suo album o singolo più recente recuperato da iTunes!
+    if (!artistImage && canzoni.length > 0) {
+        const tracciaConCopertina = canzoni.find(c => c.copertina && c.copertina !== 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png');
+        if (tracciaConCopertina) {
+            artistImage = tracciaConCopertina.copertina;
+        }
+    }
 
     const responseData = {
       artistId: artistId,
