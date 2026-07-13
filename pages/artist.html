@@ -13,34 +13,30 @@
 </head>
 
 <body>
-  <!-- Mobile Top Nav -->
-  <nav class="mobile-top-nav">
-    <a class="brand-logo text-decoration-none" href="../index.html">Schirius <span
-        class="brand-subtitle">Lyrics</span></a>
-  </nav>
-  <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand brand-logo" href="../index.html">Schirius <span class="brand-subtitle">Lyrics</span></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="featured.html">In evidenza</a></li>
-          <li class="nav-item"><a class="nav-link" href="discover.html">Scopri</a></li>
-          <li class="nav-item"><a class="nav-link active" href="artist.html">Artisti</a></li>
-        </ul>
-        <form class="d-flex align-items-center search-input-group" role="search"
-          onsubmit="event.preventDefault(); handleSearch();">
-          <input id="searchInput" class="form-control" type="search" placeholder="Cerca artista, album..."
-            aria-label="Cerca" />
-          <button class="btn search-button-primary" type="submit">⌕</button>
+  <!-- iOS 26 Native Header -->
+  <header class="ios-header">
+    <div class="ios-header-inner">
+      <a href="../index.html" class="brand-logo text-decoration-none ios-brand">Schirius <span class="brand-subtitle">Lyrics</span></a>
+      
+      <nav class="ios-nav-links">
+        <a href="../index.html" class="">Home</a>
+        <a href="featured.html" class="">In evidenza</a>
+        <a href="discover.html" class="">Scopri</a>
+        <a href="artist.html" class="active">Artisti</a>
+      </nav>
+      
+      <div class="ios-actions">
+        <form class="ios-search" onsubmit="event.preventDefault(); handleSearch();">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input id="searchInput" type="search" placeholder="Cerca artista, album..." aria-label="Cerca">
         </form>
+        <!-- Theme toggle btn will be injected here by common.js -->
       </div>
     </div>
-  </nav>
+  </header>
 
   <main class="main-content pt-5">
     <section class="container py-5 text-white">

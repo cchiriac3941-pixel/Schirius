@@ -11,16 +11,15 @@
 /* Ora le card artista ereditano lo stile Apple da base.css (Glassmorphism, sfondi scuri, niente bordi o riflessi azzurri) */
 .artist-card {
   background: var(--surface) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid transparent !important;
   border-radius: var(--radius-lg);
   padding: 2rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .artist-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translateY(-2px);
+  background: var(--surface-soft) !important;
 }
 
 .artist-card h3 {
@@ -40,14 +39,14 @@
   height: 120px;
   object-fit: cover;
   border-radius: 50%;
-  border: none;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .artist-card:hover .artist-photo {
-  transform: scale(1.04);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+  transform: scale(1.02);
+  border-color: rgba(255,255,255,0.1);
 }
 
 /* --- Header della pagina di un singolo artista / performer --- */
@@ -56,11 +55,11 @@
   display: flex;
   gap: 1.75rem;
   align-items: flex-start;
-  background: rgba(28, 28, 30, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: var(--surface);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   padding: 2rem;
   border-radius: var(--radius-lg);
 }

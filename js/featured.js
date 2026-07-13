@@ -33,11 +33,11 @@ async function fetchFeaturedData() {
                     </div>
                   </div>
                   <div class="col-md-8 ps-md-4">
-                    <span class="badge mb-3" style="background: linear-gradient(135deg, #a855f7, #d946ef);">Ultima Uscita</span>
-                    <h2 class="h1 mb-2 fw-bold text-white" style="text-shadow: 0 0 20px rgba(168,85,247,0.5);">${heroItem.title}</h2>
+                    <span class="badge mb-3" style="background: var(--accent);">Ultima Uscita</span>
+                    <h2 class="h1 mb-2 fw-bold text-white" style="text-shadow: 0 0 20px rgba(176,38,255,0.5);">${heroItem.title}</h2>
                     <p class="text-white-50 mb-3 fs-5">${heroItem.artist}</p>
                     <p class="mb-4 text-white-75">Ascolta la release più recente in assoluto tra gli artisti supportati dal portale.</p>
-                    <a href="album-detail.html?id=${heroItem.id}" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm" style="background: linear-gradient(135deg, #9333ea, #c026d3); border: none;">Ascolta Ora</a>
+                    <a href="album-detail.html?id=${heroItem.id}" class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm" style="background: var(--accent); border: none;">Ascolta Ora</a>
                   </div>
                 </div>
             `;

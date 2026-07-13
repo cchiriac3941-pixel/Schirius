@@ -27,24 +27,56 @@ function setupNavbarGlow() {
 
 window.addEventListener('DOMContentLoaded', setupNavbarGlow);
 
-function setupCursorGlow() {
-  const cursor = document.createElement('div');
-  cursor.className = 'cursor-glow';
-  document.body.appendChild(cursor);
-
-  window.addEventListener('mousemove', (event) => {
-    cursor.style.left = `${event.clientX}px`;
-    cursor.style.top = `${event.clientY}px`;
-    cursor.style.opacity = '1';
-  });
-
-  window.addEventListener('mouseout', () => {
-    cursor.style.opacity = '0';
-  });
+// Theme Init & Toggle Logic
+function initTheme() {
+  const savedTheme = localStorage.getItem('schirius_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
 }
 
-window.addEventListener('DOMContentLoaded', setupCursorGlow);
-window.addEventListener('DOMContentLoaded', setupNavbarGlow);
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('schirius_theme', newTheme);
+}
+
+function setupThemeToggle() {
+  const toggleBtnHTML = `
+    <!-- Sole per Light Mode (visibile quando in Dark) -->
+    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <!-- Luna per Dark Mode (visibile quando in Light) -->
+    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  `;
+
+  // --- UNIFIED IOS HEADER ---
+  const iosActions = document.querySelector('.ios-actions');
+  if (iosActions) {
+    const themeBtn = document.createElement('button');
+    themeBtn.className = 'theme-toggle-btn';
+    themeBtn.setAttribute('aria-label', 'Toggle Theme');
+    themeBtn.innerHTML = toggleBtnHTML;
+    themeBtn.addEventListener('click', toggleTheme);
+    iosActions.appendChild(themeBtn);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  setupThemeToggle();
+  setupNavbarGlow();
+});
 
 function setupBottomNav() {
   const bottom = document.querySelector('.bottom-nav');
@@ -174,3 +206,46 @@ window.handleSearch = async function() {
     }
   }
 }
+
+
+// ==========================================
+// PAGE TRANSITIONS (iOS 26)
+// ==========================================
+function setupPageTransitions() {
+    document.body.classList.add('page-transition');
+    
+    // Add entered state slightly after load
+    setTimeout(() => {
+        document.body.classList.add('page-entered');
+    }, 50);
+
+    // Fade out on link click
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('#') && !link.hasAttribute('target')) {
+                e.preventDefault();
+                document.body.classList.remove('page-entered');
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400); // Wait for transition
+            }
+        });
+    });
+}
+window.addEventListener('DOMContentLoaded', setupPageTransitions);
+
+// ==========================================
+// GLOBAL IMAGE ERROR FALLBACK (Apple Empty State)
+// ==========================================
+window.addEventListener('error', function(e) {
+    if (e.target.tagName && e.target.tagName.toLowerCase() === 'img') {
+        e.target.onerror = null;
+        // Sostituisce l'immagine rotta con un placeholder CSS via inline style
+        e.target.style.background = 'linear-gradient(135deg, rgba(30,30,32,1) 0%, rgba(176,38,255,0.2) 100%)';
+        e.target.style.objectFit = 'contain';
+        // Genera un SVG in base64 al volo con il logo Schirius
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="20" fill="rgba(255,255,255,0.5)">Schirius</text></svg>';
+        e.target.src = "data:image/svg+xml;base64," + btoa(svg);
+    }
+}, true);

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let artistId = params.get('id');
         let fallbackName = params.get('name') || params.get('artist'); 
         
-        document.getElementById('artist-name').textContent = "Caricamento...";
+        document.getElementById('artist-name').innerHTML = '<div class="skeleton skeleton-text" style="width: 50%;"></div>';
         const artistImg = document.getElementById('artist-img');
 
         // Se non c'è l'ID, cerchiamolo tramite l'API di ricerca (per evitare nomi testuali al backend)

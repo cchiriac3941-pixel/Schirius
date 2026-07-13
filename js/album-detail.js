@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('album-name').textContent = "Album non trovato";
         return;
     }
+    document.getElementById('album-name').innerHTML = '<div class="skeleton skeleton-text" style="width: 60%;"></div>';
 
     const apiUrl = `/api/spotify/album?id=${albumId}`;
 
@@ -13,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                document.getElementById('album-name').textContent = "Errore nel caricamento";
+                document.getElementById('album-name').innerHTML = "<div class='empty-state text-muted'>Nessun album trovato</div>";
                 return;
             }
 

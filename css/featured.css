@@ -1,35 +1,41 @@
 /* ============================================================
    SCHIRIUS LYRICS — featured.css
-   Stili SOLO per pages/featured/featured.html (stessa cartella):
-   card dell'ultima uscita in evidenza e classifica dei brani
-   (music-card + rank-badge).
+   Stili per pages/featured.html in linea con base.css
    ============================================================ */
 
 .latest-card {
-  background: linear-gradient(145deg, rgba(88, 28, 135, 0.5), rgba(49, 10, 82, 0.45));
-  border: 1px solid rgba(168, 85, 247, 0.45);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 0 70px rgba(168, 85, 247, 0.22), 0 24px 60px rgba(0, 0, 0, 0.5);
+  background: var(--surface);
+  border: none;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
 }
 
 .music-card {
-  background: rgba(15, 8, 30, 0.88);
-  border: 1px solid var(--border, rgba(255,255,255,0.1));
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .music-card.hover-lift:hover {
-  transform: translateY(-6px);
-  border-color: rgba(168, 85, 247, 0.6);
-  box-shadow: 0 18px 45px rgba(168, 85, 247, 0.3);
+  transform: scale(1.02);
+}
+
+.music-card img {
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  transition: box-shadow 0.2s ease;
+}
+
+.music-card.hover-lift:hover img {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
 .rank-badge {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(217, 70, 239, 0.95)) !important;
+  background: var(--accent) !important;
   color: #fff !important;
-  font-family: var(--font-mono, monospace);
-  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  border-radius: 50% !important;
 }

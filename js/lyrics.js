@@ -72,8 +72,45 @@ function cercaTesto(artista, titolo) {
         .then(data => {
             const lyricsContainer = document.getElementById('lyrics-container');
             if (data.lyrics) {
-                lyricsContainer.style.whiteSpace = 'pre-line';
-                lyricsContainer.textContent = data.lyrics;
+                const lines = data.lyrics.split('\n').map(line => line.trim());
+                lyricsContainer.innerHTML = ''; // Svuota il contenitore
+                const spans = [];
+                
+                lines.forEach(line => {
+                    if (line) {
+                        const span = document.createElement('span');
+                        span.className = 'lyric-line';
+                        span.textContent = line;
+                        lyricsContainer.appendChild(span);
+                        spans.push(span);
+                    } else {
+                        // Spazio vuoto
+                        lyricsContainer.appendChild(document.createElement('br'));
+                    }
+                });
+
+                // Sync audio (stima lineare basata sull'anteprima da 30s)
+                const audioPlayer = document.getElementById('audio-player');
+                if (audioPlayer && spans.length > 0) {
+                    audioPlayer.addEventListener('timeupdate', () => {
+                        if (!audioPlayer.duration || audioPlayer.paused) return;
+                        
+                        const progress = audioPlayer.currentTime / audioPlayer.duration;
+                        const activeIndex = Math.floor(progress * spans.length);
+                        
+                        spans.forEach((s, idx) => {
+                            if (idx === activeIndex) {
+                                if (!s.classList.contains('active-line')) {
+                                    s.classList.add('active-line');
+                                    // Scroll morbido per centrare la riga illuminata
+                                    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }
+                            } else {
+                                s.classList.remove('active-line');
+                            }
+                        });
+                    });
+                }
             } else {
                 lyricsContainer.style.whiteSpace = 'normal';
                 lyricsContainer.innerHTML = fallbackHTML;

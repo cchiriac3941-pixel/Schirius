@@ -12,44 +12,46 @@
       .track-item {
         display: flex;
         align-items: center;
-        padding: 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        transition: background 0.3s ease;
+        padding: 0.75rem 0;
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.15);
+        transition: opacity 0.2s ease;
         text-decoration: none;
         color: white;
       }
-      .track-item:hover { background: rgba(255,255,255,0.05); color: white; }
-      .track-number { width: 30px; color: #a0a8b5; font-weight: bold; }
+      .track-item:hover { 
+        opacity: 0.7; 
+      }
+      .track-number { width: 35px; color: var(--text-muted); font-weight: 500; font-family: var(--font-body); font-size: 0.95rem; }
       .track-info { flex: 1; }
-      .track-title { margin: 0; font-weight: 600; font-size: 1.1rem; }
-      .track-artist { margin: 0; font-size: 0.85rem; color: #a0a8b5; }
+      .track-title { margin: 0; font-weight: 500; font-size: 1.05rem; }
+      .track-artist { margin: 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
     </style>
   </head>
   <body>
-    <!-- Mobile Top Nav -->
-    <nav class="mobile-top-nav">
-        <a class="brand-logo text-decoration-none" href="../index.html">Schirius <span class="brand-subtitle">Lyrics</span></a>
-    </nav>
-    <nav class="navbar navbar-expand-lg navbar-custom py-3 shadow-sm fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand brand-logo" href="../index.html">Schirius <span class="brand-subtitle">Lyrics</span></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="featured.html">In evidenza</a></li>
-            <li class="nav-item"><a class="nav-link" href="discover.html">Scopri</a></li>
-            <li class="nav-item"><a class="nav-link active" href="artist.html">Artisti</a></li>
-          </ul>
-          <form class="d-flex align-items-center search-input-group" role="search" onsubmit="event.preventDefault(); handleSearch();">
-            <input id="searchInput" class="form-control" type="search" placeholder="Cerca artista, album..." aria-label="Cerca" />
-            <button class="btn search-button-primary" type="submit">⌕</button>
-          </form>
-        </div>
+    <!-- iOS 26 Native Header -->
+  <header class="ios-header">
+    <div class="ios-header-inner">
+      <a href="../index.html" class="brand-logo text-decoration-none ios-brand">Schirius <span class="brand-subtitle">Lyrics</span></a>
+      
+      <nav class="ios-nav-links">
+        <a href="../index.html" class="">Home</a>
+        <a href="featured.html" class="">In evidenza</a>
+        <a href="discover.html" class="">Scopri</a>
+        <a href="artist.html" class="">Artisti</a>
+      </nav>
+      
+      <div class="ios-actions">
+        <form class="ios-search" onsubmit="event.preventDefault(); handleSearch();">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input id="searchInput" type="search" placeholder="Cerca artista, album..." aria-label="Cerca">
+        </form>
+        <!-- Theme toggle btn will be injected here by common.js -->
       </div>
-    </nav>
+    </div>
+  </header>
 
     <main class="main-content pt-5">
       <section class="container py-5 text-white">
@@ -57,7 +59,7 @@
           <img src="" alt="Cover Album" class="profile-small" id="album-cover" style="display: none; border-radius: 8px;">
           <div class="artist-info">
             <span class="eyebrow text-white-50" id="album-type">Album</span>
-            <h2 id="album-name">Caricamento...</h2>
+            <h2 id="album-name"><div class="skeleton skeleton-text" style="width: 50%; display: inline-block;"></div></h2>
             <p class="text-white-50" id="album-artist"></p>
           </div>
         </div>
