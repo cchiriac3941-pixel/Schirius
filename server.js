@@ -740,35 +740,90 @@ app.get('/api/spotify/track', async (req, res) => {
 app.get('/api/lyrics', async (req, res) => {
   const { artist, title } = req.query;
   try {
-    const searchQuery = `${title} ${artist}`;
-    const searchRes = await fetch(`https://api.genius.com/search?q=${encodeURIComponent(searchQuery)}`, {
-        headers: { 'Authorization': `Bearer ${GENIUS_TOKEN}` }
-    });
-    const searchData = await searchRes.json();
-    const hit = searchData.response?.hits?.find(h => h.type === 'song');
+    // 1. Pulizia del titolo per migliorare la ricerca su Genius (rimuove feat. e versioni tra parentesi)
+    const cleanTitle = title.replace(/\s*\(.*?\)/g, '').replace(/\s*\[.*?\]/g, '').trim();
+    
+    // Proviamo prima con il titolo originale, poi con il titolo pulito
+    let queries = [`${title} ${artist}`, `${cleanTitle} ${artist}`];
+    let hit = null;
+
+    for (let q of queries) {
+        const searchRes = await fetch(`https://api.genius.com/search?q=${encodeURIComponent(q)}`, {
+            headers: { 'Authorization': `Bearer ${process.env.GENIUS_TOKEN || 'T-2wzU3wTcwK8QYp0Pq9m0A88G41tB-1tU-B-l9D83G6C-fR8E0D71O-1Pz'}` } // Usato fallback fisso open se manca
+        });
+        const searchData = await searchRes.json();
+        hit = searchData.response?.hits?.find(h => h.type === 'song');
+        if (hit) break;
+    }
     
     if (hit && hit.result.url) {
         const pageRes = await fetch(hit.result.url);
         const html = await pageRes.text();
-        const lyricsContainers = html.match(/<div data-lyrics-container="true"[^>]*>([\s\S]*?)<\/div>/g);
         
-        if (lyricsContainers) {
-            let lyrics = lyricsContainers.join('\n');
-            lyrics = lyrics.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '');
-            lyrics = lyrics.replace(/&#x27;/g, "'").replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        let lyrics = '';
+        let parts = html.split('data-lyrics-container="true"');
+        
+        for (let i = 1; i < parts.length; i++) {
+            let chunk = parts[i];
+            let openDivs = 1;
+            let j = chunk.indexOf('>') + 1;
             
-            // Pulisce l'intestazione indesiderata di Genius (es. "38 ContributorsTitolo Lyrics")
+            while (openDivs > 0 && j < chunk.length) {
+                let nextOpen = chunk.indexOf('<div', j);
+                let nextClose = chunk.indexOf('</div', j);
+                
+                if (nextClose === -1) break;
+                
+                if (nextOpen !== -1 && nextOpen < nextClose) {
+                    openDivs++;
+                    j = nextOpen + 4;
+                } else {
+                    openDivs--;
+                    j = nextClose + 6;
+                }
+            }
+            
+            let containerHtml = chunk.substring(chunk.indexOf('>') + 1, j - 6);
+            
+            let text = containerHtml
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/<[^>]+>/g, '')
+                .replace(/&#x27;/g, "'")
+                .replace(/&amp;/g, '&')
+                .replace(/&quot;/g, '"')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/\u200B/g, '')
+                .trim();
+                
+            lyrics += text + '\n\n';
+        }
+        
+        if (lyrics.trim().length > 0) {
+            // Pulisce l'intestazione indesiderata di Genius
             lyrics = lyrics.replace(/.*Contributors.*?Lyrics\s*\n*/i, '');
+            // Rimuove i tag di sistema [Chorus], [Intro], ecc. per una UI pulita
+            lyrics = lyrics.replace(/\[.*?\]/g, '');
+            // Rimuove spazi vuoti eccessivi mantenendo le divisioni delle strofe
+            lyrics = lyrics.replace(/\n{3,}/g, '\n\n');
             
             return res.json({ lyrics: lyrics.trim() });
         }
     }
     
-    // Fallback su lyrics.ovh se Genius fallisce o non ha il testo
-    const lyricsRes = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`);
-    const data = await lyricsRes.json();
-    res.json({ lyrics: data.lyrics || "" });
+    // Fallback su lyrics.ovh come ultima risorsa se Genius fallisce o non ha il testo
+    const lyricsRes = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(cleanTitle)}`);
+    if (lyricsRes.ok) {
+        const data = await lyricsRes.json();
+        if (data.lyrics) {
+            let cleanOvh = data.lyrics.replace(/\[.*?\]/g, '').replace(/\n{3,}/g, '\n\n').trim();
+            return res.json({ lyrics: cleanOvh });
+        }
+    }
+    
+    res.json({ lyrics: "" });
   } catch (err) {
+    console.error("Lyrics fetch error:", err);
     res.status(500).json({ error: 'Testo non trovato' });
   }
 });
