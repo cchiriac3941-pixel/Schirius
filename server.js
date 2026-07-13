@@ -383,8 +383,8 @@ app.get('/api/spotify/artist', async (req, res) => {
     if (allAlbums.length > 0) {
       for (const item of allAlbums) {
           if (!item || !item.artists) continue; // Previene crash TypeError
-          // Verifica severa: l'artista è tra i primari di questo album?
-          let isPrimary = item.artists.some(a => a.id === spotifyArtistId);
+          // Verifica severa: l'artista è il PRIMO artista di questo album?
+          let isPrimary = item.artists.length > 0 && item.artists[0].id === spotifyArtistId;
           let computedGroup = item.album_group || (isPrimary ? item.album_type : 'appears_on');
 
           if (computedGroup === 'appears_on' || !isPrimary) {
@@ -435,12 +435,14 @@ app.get('/api/spotify/artist', async (req, res) => {
                                     let normName = normalizeTrackName(track.name);
                                     if (!visti.has(normName)) {
                                         visti.add(normName);
+                                        // Se è il primo artista della traccia, consideralo un suo 'single', altrimenti 'appears_on' (vero featuring)
+                                        let trackGroup = (track.artists.length > 0 && track.artists[0].id === spotifyArtistId) ? 'single' : 'appears_on';
                                         canzoni.push({
                                             id: track.id,
                                             titolo: track.name,
                                             artista: track.artists.map(a => a.name).join(', '),
                                             copertina: album.images && album.images.length > 0 ? album.images[0].url : '',
-                                            album_group: 'appears_on',
+                                            album_group: trackGroup,
                                             release_date: album.release_date
                                         });
                                     }

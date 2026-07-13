@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderHomeData(tracks, artistName) {
         // Separa Album e Singoli
-        const albums = tracks.filter(t => t.albumType === 'album');
-        const singles = tracks.filter(t => t.albumType === 'single');
+        const albums = tracks.filter(t => t.album_group === 'album');
+        const singles = tracks.filter(t => t.album_group === 'single');
 
         // Se non ci sono album, usa il primo singolo come Hero
         const heroItem = albums.length > 0 ? albums[0] : singles[0];
@@ -52,42 +52,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (heroContainer && heroItem) {
             heroContainer.innerHTML = `
                 <h2 class="h4 mb-4 fw-bold">Album Consigliato</h2>
-                <a href="pages/album-detail.html?id=${heroItem.albumId}&name=${encodeURIComponent(heroItem.albumName)}" class="text-decoration-none">
+                <a href="pages/album-detail.html?id=${heroItem.id}&name=${encodeURIComponent(heroItem.titolo)}" class="text-decoration-none">
                     <div class="hero-card overflow-hidden d-flex flex-column flex-md-row text-center text-md-start" style="transition: transform 0.25s ease;">
-                        <img src="${heroItem.coverUrl}" alt="${heroItem.albumName}" class="img-fluid" style="width: 100%; max-width: 350px; object-fit: cover;">
+                        <img src="${heroItem.copertina}" alt="${heroItem.titolo}" class="img-fluid" style="width: 100%; max-width: 350px; object-fit: cover;">
                         <div class="p-4 p-md-5 d-flex flex-column justify-content-center w-100">
                             <span class="badge rounded-pill bg-accent bg-opacity-75 text-white align-self-center align-self-md-start mb-3 px-3 py-2">In Evidenza</span>
-                            <h3 class="display-5 fw-bold text-white mb-2">${heroItem.albumName}</h3>
-                            <p class="fs-5 text-white-50 mb-0">${artistName}</p>
+                            <h3 class="display-5 fw-bold text-white mb-2">${heroItem.titolo}</h3>
+                            <p class="fs-5 text-white-50 mb-0">${heroItem.artista}</p>
                         </div>
                     </div>
                 </a>
             `;
         }
 
-        // Seleziona fino a 4 singoli casuali (o i primi 4)
-        const recommendedSingles = singles.sort(() => 0.5 - Math.random()).slice(0, 4);
+        // Render Singoli Consigliati
         const singlesGrid = document.getElementById('recommended-singles-grid');
-        
         if (singlesGrid) {
-            if (recommendedSingles.length === 0) {
-                document.getElementById('recommended-singles-container').style.display = 'none';
+            singlesGrid.innerHTML = '';
+            // Prendi i primi 4 singoli (escludendo quello usato come hero se necessario)
+            let recommendedSingles = singles;
+            if (albums.length === 0 && singles.length > 0) {
+                recommendedSingles = singles.slice(1, 5);
             } else {
-                singlesGrid.innerHTML = '';
+                recommendedSingles = singles.slice(0, 4);
+            }
+
+            if (recommendedSingles.length > 0) {
                 recommendedSingles.forEach(single => {
                     const col = document.createElement('div');
-                    col.className = 'col-6 col-md-3';
+                    col.className = 'col-6 col-md-3 mb-4';
                     col.innerHTML = `
-                        <a href="pages/lyrics.html?id=${single.id}&track=${encodeURIComponent(single.title)}&artist=${encodeURIComponent(artistName)}" class="release-card h-100 recommendation-card">
+                        <a href="pages/album-detail.html?id=${single.id}" class="release-card h-100 recommendation-card">
                             <div class="position-relative">
-                                <img src="${single.coverUrl}" alt="${single.title}" loading="lazy">
+                                <img src="${single.copertina}" alt="${single.titolo}" loading="lazy">
                                 <div class="play-overlay">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                                 </div>
                             </div>
                             <div class="p-3">
-                                <h4 title="${single.title}" class="mb-1">${single.title}</h4>
-                                <p title="${artistName}" class="mb-0 text-white-50">${artistName}</p>
+                                <h4 title="${single.titolo}" class="mb-1">${single.titolo}</h4>
+                                <p title="${single.artista}" class="mb-0 text-white-50">${single.artista}</p>
                             </div>
                         </a>
                     `;
