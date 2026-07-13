@@ -297,15 +297,19 @@ app.get('/api/spotify/artist', async (req, res) => {
       }
       let albumsRes = await fetch(nextUrl, { headers: { 'Authorization': `Bearer ${token}` } });
       
-      if (albumsRes.status === 429) {
-        console.log("Rate Limit su /albums in Spotify. Fallback iTunes avanzato attivato...");
+      if (albumsRes.status === 429 || !albumsRes.ok) {
+        console.log("Errore o Rate Limit su /albums in Spotify. Fallback iTunes avanzato attivato...");
         fallbackTriggered = true;
         break;
       }
       
       const albumsData = await albumsRes.json();
-      allAlbums = allAlbums.concat(albumsData.items);
-      nextUrl = albumsData.next;
+      if (albumsData && albumsData.items) {
+          allAlbums = allAlbums.concat(albumsData.items);
+          nextUrl = albumsData.next;
+      } else {
+          nextUrl = null;
+      }
       pagesFetched++;
     }
 
@@ -378,6 +382,7 @@ app.get('/api/spotify/artist', async (req, res) => {
 
     if (allAlbums.length > 0) {
       for (const item of allAlbums) {
+          if (!item || !item.artists) continue; // Previene crash TypeError
           // Verifica severa: l'artista è tra i primari di questo album?
           let isPrimary = item.artists.some(a => a.id === spotifyArtistId);
           let computedGroup = item.album_group || (isPrimary ? item.album_type : 'appears_on');
