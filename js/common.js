@@ -25,7 +25,26 @@ function setupNavbarGlow() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', setupNavbarGlow);
+function setupGlobalCardGlow() {
+  document.addEventListener('mousemove', e => {
+    // Seleziona tutte le card interattive che supportano l'effetto Liquid Glass
+    const cards = document.querySelectorAll('.card, .hero-card, .release-card, .recommendation-card, .liquid-featured-card');
+    
+    for (const card of cards) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    }
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  setupNavbarGlow();
+  setupGlobalCardGlow();
+});
 
 // Theme Init & Toggle Logic
 function initTheme() {

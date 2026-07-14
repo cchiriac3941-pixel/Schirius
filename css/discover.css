@@ -1,21 +1,106 @@
 /* ============================================================
-   SCHIRIUS LYRICS — discover.css
-   Stili SOLO per pages/discover/discover.html (stessa cartella). La pagina usa già le card
-   "glass" generiche di base.css: qui aggiungiamo solo l'hover e
-   una rifinitura visiva dedicata a questa pagina.
-   Richiede shared/base.css caricato prima.
+   DISCOVER PAGE STYLES (iOS 26 / Apple Music Vibe)
    ============================================================ */
 
-.discover-card {
-  transition: transform 0.2s ease, background-color 0.2s ease;
-  height: 100%;
+/* --- GRIGLIA DELLE CATEGORIE (GENERI) --- */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
 }
 
-.discover-card:hover {
-  transform: translateY(-2px);
-  background: var(--surface-soft);
+.category-card {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    aspect-ratio: 1; /* Quadrato perfetto */
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
 
-.discover-card h3 {
-  color: #ffffff;
+.category-card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    transition: transform 0.5s ease;
+    filter: brightness(0.6) saturate(1.2);
+}
+
+.category-card:hover img {
+    transform: scale(1.1);
+    filter: brightness(0.7) saturate(1.4);
+}
+
+.category-card h3 {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 1rem;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    margin: 0;
+}
+
+.category-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(176, 38, 255, 0.2);
+}
+
+/* --- SCROLL ORIZZONTALE (NUOVE USCITE) --- */
+.horizontal-scroll-container {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+    /* Nascondi la scrollbar ma mantieni lo scroll */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 1rem;
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.new-release-card {
+    flex: 0 0 auto;
+    width: 180px; /* Larghezza fissa per lo slider */
+    scroll-snap-align: start;
+}
+
+/* Sovrascrivi il padding della release card per lo slider */
+.new-release-card .card-body {
+    padding: 0.5rem 0 0 0;
+}
+
+.new-release-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+}
+
+.new-release-card p {
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colonne su mobile */
+        gap: 1rem;
+    }
+    .new-release-card {
+        width: 140px;
+    }
 }

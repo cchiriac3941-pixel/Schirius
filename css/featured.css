@@ -3,34 +3,8 @@
    Stili per pages/featured.html in linea con base.css
    ============================================================ */
 
-.latest-card {
-  background: var(--surface);
-  border: none;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  position: relative;
-}
-
-.music-card {
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
-  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.music-card.hover-lift:hover {
-  transform: scale(1.02);
-}
-
-.music-card img {
-  border-radius: var(--radius-sm);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  transition: box-shadow 0.2s ease;
-}
-
-.music-card.hover-lift:hover img {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-}
+/* Gli stili base per le card sono definiti in base.css */
+/* Aggiungiamo solo una leggera ombra personalizzata se necessario, ma ereditano già il Glassmorphism */
 
 .rank-badge {
   background: var(--accent) !important;

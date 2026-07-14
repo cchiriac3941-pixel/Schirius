@@ -810,6 +810,7 @@ app.get('/api/spotify/album', async (req, res) => {
                   name: albumInfo ? albumInfo.collectionName : 'Album',
                   cover: coverUrl,
                   artist: albumInfo ? albumInfo.artistName : '',
+                  artist_id: albumInfo && albumInfo.artistId ? albumInfo.artistId.toString() : null,
                   release_date: albumInfo && albumInfo.releaseDate ? albumInfo.releaseDate.substring(0, 10) : '',
                   total_tracks: tracce.length,
                   tracks: tracce.map((t, idx) => ({
@@ -818,7 +819,8 @@ app.get('/api/spotify/album', async (req, res) => {
                       track_number: t.trackNumber || (idx + 1),
                       duration_ms: t.trackTimeMillis,
                       preview_url: t.previewUrl || null,
-                      artist: t.artistName // FIX TYPO: artists -> artist
+                      artist: t.artistName,
+                      artist_id: t.artistId ? t.artistId.toString() : null
                   }))
               });
           } else {
@@ -861,12 +863,14 @@ app.get('/api/spotify/album', async (req, res) => {
       name: data.name,
       cover: data?.images?.[0]?.url || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png',
       artist: data?.artists?.[0]?.name || 'Artista Sconosciuto',
+      artist_id: data?.artists?.[0]?.id || null,
       release_date: data.release_date || '',
       tracks: (data.tracks?.items || []).map(t => ({
         id: t.id,
         name: t.name,
         preview_url: t.preview_url || null,
-        artist: (t.artists || []).map(a => a.name).join(', ')
+        artist: (t.artists || []).map(a => a.name).join(', '),
+        artist_id: (t.artists && t.artists.length > 0) ? t.artists[0].id : null
       }))
     });
   } catch (err) {
@@ -890,6 +894,7 @@ app.get('/api/spotify/track', async (req, res) => {
                   id: trackId,
                   name: t.trackName,
                   artist: t.artistName,
+                  artist_id: t.artistId ? t.artistId.toString() : null,
                   cover: t.artworkUrl100 ? t.artworkUrl100.replace('100x100bb', '600x600bb') : '',
                   album: t.collectionName,
                   preview_url: t.previewUrl || null,
@@ -914,6 +919,7 @@ app.get('/api/spotify/track', async (req, res) => {
       id: data.id,
       name: data.name,
       artist: data.artists[0].name,
+      artist_id: data.artists[0].id,
       cover: data.album.images.length > 0 ? data.album.images[0].url : '',
       album: data.album.name,
       preview_url: data.preview_url,
@@ -1014,6 +1020,96 @@ app.get('/api/lyrics', async (req, res) => {
     console.error("Lyrics fetch error:", err);
     res.status(500).json({ error: 'Testo non trovato' });
   }
+});
+
+app.get('/api/discover-content', async (req, res) => {
+    try {
+        const token = await getSpotifyToken();
+        
+        // 1. Fetch Categories
+        let categories = [];
+        try {
+            const catRes = await fetch('https://api.spotify.com/v1/browse/categories?limit=20&country=IT', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (catRes.ok) {
+                const catData = await catRes.json();
+                categories = (catData.categories?.items || []).map(c => ({
+                    id: c.id,
+                    name: c.name,
+                    icon: c.icons && c.icons.length > 0 ? c.icons[0].url : ''
+                }));
+            }
+        } catch (e) { console.error("Errore fetch categorie:", e); }
+        
+        // Fallback categorie (hardcoded base)
+        if (categories.length === 0) {
+            categories = [
+                { id: 'pop', name: 'Pop', icon: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80' },
+                { id: 'rock', name: 'Rock', icon: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=500&q=80' },
+                { id: 'hiphop', name: 'Hip-Hop', icon: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&q=80' },
+                { id: 'dance', name: 'Dance/Elettronica', icon: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80' },
+                { id: 'indie_alt', name: 'Indie', icon: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&q=80' },
+                { id: 'mood', name: 'Mood', icon: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&q=80' }
+            ];
+        }
+
+        // 2. Fetch New Releases ONLY FOR SUPPORTED ARTISTS
+        let newReleases = [];
+        try {
+            const SUPPORTED_ARTISTS = [
+                "Lazza", "Sfera Ebbasta", "Shiva", "Capo Plaza", "Artie 5ive", "Kid Yugi", 
+                "Tony Boy", "Ghali", "Travis Scott", "Playboi Carti", "Drake", "Future", 
+                "Young Thug", "Metro Boomin", "Salmo", "Niky Savage", "Lil Cr", "Diss Gacha", 
+                "Lil Baby", "Geolier", "Tedua", "Guè", "Marracash", "thasup"
+            ];
+
+            // Peschiamo 10 artisti casuali dai nostri supportati per evitare il rate limit
+            const shuffled = [...SUPPORTED_ARTISTS].sort(() => 0.5 - Math.random()).slice(0, 10);
+            
+            for (const artistName of shuffled) {
+                // Troviamo l'ID dell'artista
+                const searchRes = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (searchRes.ok) {
+                    const searchData = await searchRes.json();
+                    if (searchData.artists && searchData.artists.items.length > 0) {
+                        const artist = searchData.artists.items[0];
+                        
+                        // Otteniamo l'ultima release
+                        const albumsRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album,single&limit=1`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        if (albumsRes.ok) {
+                            const albumsData = await albumsRes.json();
+                            if (albumsData.items && albumsData.items.length > 0) {
+                                const latest = albumsData.items[0];
+                                newReleases.push({
+                                    id: latest.id,
+                                    name: latest.name,
+                                    artist: latest.artists.map(a => a.name).join(', '),
+                                    cover: latest.images && latest.images.length > 0 ? latest.images[0].url : '',
+                                    release_date: latest.release_date
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Ordiniamo per data decrescente così abbiamo davvero le "nuove" uscite
+            newReleases.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+            
+        } catch (e) { console.error("Errore fetch new releases:", e); }
+
+        res.json({ categories, newReleases });
+    } catch (err) {
+        console.error("Errore endpoint discover:", err);
+        res.status(500).json({ error: 'Impossibile caricare i dati discovery' });
+    }
 });
 
 const PORT = process.env.PORT || 3000;

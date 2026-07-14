@@ -8,31 +8,8 @@
   padding-bottom: 4rem;
 }
 
-.hero-card {
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
+/* Gli stili di base per .hero-card e .recommendation-card sono ora gestiti dal sistema unificato in base.css */
 
-.hero-card .badge {
-  font-family: var(--font-body);
-  font-weight: 700;
-}
-
-/* Le 4 card "Consigliato" sotto l'ultima uscita */
-.recommendation-card {
-  background: var(--surface) !important;
-  border: 1px solid transparent !important;
-  border-radius: var(--radius-md) !important;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.recommendation-card:hover {
-  transform: translateY(-2px);
-  background: var(--surface-soft) !important;
-}
 
 #albumsMessage {
   margin-bottom: 2rem;

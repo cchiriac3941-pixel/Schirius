@@ -487,25 +487,73 @@ p {
   text-shadow: 0 0 40px rgba(176, 38, 255, 0.3), 0 0 80px rgba(176, 38, 255, 0.1);
 }
 
-/* Stile Card Apple (Sfondo solido grigio scuro, no border accentuati) */
-.hero-card,
-.card.album-card,
-.card.glass,
-.recommendation-card {
-  background: var(--surface);
-  border: none;
+/* Stile Card Universale Premium (Glassmorphism + Bordi sottili) */
+.card, .hero-card, .card.album-card, .card.glass, .recommendation-card, .release-card, a.release-card {
+  background: rgba(30, 30, 30, 0.5);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
-}
-
-.release-card, a.release-card {
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 0;
+  padding: 1rem;
   overflow: hidden;
   text-decoration: none;
-  display: block;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  position: relative; /* Necessario per il liquid glass border */
+}
+
+/* Liquid Glass Border Glow (iOS 26 Style) */
+.card::before, .hero-card::before, .card.album-card::before, .card.glass::before, .recommendation-card::before, .release-card::before, a.release-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  padding: 2px; /* spessore del bordo luminoso */
+  background: radial-gradient(
+    800px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(176, 38, 255, 0.4),
+    transparent 40%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.release-card:hover::before, a.release-card:hover::before, .card:hover::before, .hero-card:hover::before, .recommendation-card:hover::before {
+  opacity: 1;
+}
+
+:root[data-theme="light"] .card::before, :root[data-theme="light"] .hero-card::before, :root[data-theme="light"] .card.album-card::before, :root[data-theme="light"] .card.glass::before, :root[data-theme="light"] .recommendation-card::before, :root[data-theme="light"] .release-card::before, :root[data-theme="light"] a.release-card::before {
+  background: radial-gradient(
+    800px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+    rgba(176, 38, 255, 0.2),
+    transparent 40%
+  );
+}
+
+:root[data-theme="light"] .card, :root[data-theme="light"] .hero-card, :root[data-theme="light"] .card.album-card, :root[data-theme="light"] .card.glass, :root[data-theme="light"] .recommendation-card, :root[data-theme="light"] .release-card, :root[data-theme="light"] a.release-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.release-card:hover, a.release-card:hover, .card:hover, .hero-card:hover, .recommendation-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(176, 38, 255, 0.15);
+  border-color: rgba(176, 38, 255, 0.3);
+  background: rgba(40, 40, 40, 0.6);
+}
+
+:root[data-theme="light"] .release-card:hover, :root[data-theme="light"] a.release-card:hover, :root[data-theme="light"] .card:hover, :root[data-theme="light"] .hero-card:hover, :root[data-theme="light"] .recommendation-card:hover {
+  box-shadow: 0 15px 35px rgba(176, 38, 255, 0.12);
+  border-color: rgba(176, 38, 255, 0.25);
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .release-card img {
@@ -513,12 +561,20 @@ p {
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.4s ease;
+  margin-bottom: 0.5rem;
+}
+
+.release-card:hover img {
+  transform: scale(1.04);
 }
 
 .release-card .card-body {
-  padding: 0.75rem 0.25rem;
+  padding: 0.25rem 0 0 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .release-card h3 {
@@ -541,34 +597,36 @@ p {
   text-overflow: ellipsis;
 }
 
-.release-card:hover, a.release-card:hover {
-  background: transparent;
-  transform: scale(1.02);
-}
-
-.release-card:hover img {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-}
-
-/* Card artisti (rotonde) */
+/* Card artisti (rotonde) - Manteniamo lo stile pulito ma aggiungiamo un super glow */
 .artist-card {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  padding: 0.5rem;
+  align-items: center;
+  text-align: center;
 }
 .artist-card .artist-photo {
   width: 100%;
+  max-width: 180px;
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  border: 2px solid transparent;
 }
 .artist-card:hover .artist-photo {
-  transform: scale(1.05);
+  transform: scale(1.08) translateY(-4px);
+  box-shadow: 0 15px 35px rgba(176, 38, 255, 0.4);
+  border: 2px solid rgba(176, 38, 255, 0.6);
+}
+:root[data-theme="light"] .artist-card:hover .artist-photo {
+  box-shadow: 0 15px 35px rgba(176, 38, 255, 0.25);
 }
 .artist-card h3 {
-  font-size: 1rem;
-  margin-top: 1rem;
+  font-size: 1.05rem;
+  margin-top: 1.2rem;
   font-weight: 600;
 }
 
@@ -902,4 +960,16 @@ html {
 
 :root[data-theme="light"] html {
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Stili per link agli artisti cliccabili nelle pagine Album e Lyrics */
+.artist-link {
+  transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+  text-decoration-color: transparent;
+}
+
+.artist-link:hover {
+  opacity: 0.8;
+  text-decoration: underline !important;
+  text-decoration-color: currentColor;
 }

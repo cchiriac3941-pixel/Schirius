@@ -40,9 +40,54 @@
   <main class="main-content pt-5">
     <section class="container py-5 text-white">
       <div class="section-header text-center mb-5">
-        <span class="eyebrow text-white-50">Scopri</span>
-        <h1 class="text-white"></h1>
-        <p class="text-white-50 mx-auto"></p>
+        <span class="eyebrow text-white-50">Novità</span>
+        <h1 class="text-white">Nuove Uscite</h1>
+        <p class="text-white-50 mx-auto">Gli album più caldi del momento in tutto il mondo.</p>
+      </div>
+
+      <!-- Scroll orizzontale Nuove Uscite -->
+      <div id="new-releases-container" class="horizontal-scroll-container">
+        <!-- Skeletons per le nuove uscite -->
+        <a href="#" class="release-card new-release-card skeleton">
+          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 0.5rem; border-radius: 12px;"></div>
+          <div class="card-body">
+            <div class="skeleton skeleton-text" style="width: 80%;"></div>
+            <div class="skeleton skeleton-text" style="width: 50%;"></div>
+          </div>
+        </a>
+        <a href="#" class="release-card new-release-card skeleton">
+          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 0.5rem; border-radius: 12px;"></div>
+          <div class="card-body">
+            <div class="skeleton skeleton-text" style="width: 80%;"></div>
+            <div class="skeleton skeleton-text" style="width: 50%;"></div>
+          </div>
+        </a>
+        <a href="#" class="release-card new-release-card skeleton">
+          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 0.5rem; border-radius: 12px;"></div>
+          <div class="card-body">
+            <div class="skeleton skeleton-text" style="width: 80%;"></div>
+            <div class="skeleton skeleton-text" style="width: 50%;"></div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="container py-5 text-white mt-4">
+      <div class="section-header text-center mb-4">
+        <span class="eyebrow text-white-50">Esplora</span>
+        <h2 class="text-white fw-bold">Generi e Mood</h2>
+        <p class="text-white-50 mx-auto">Sfoglia tutta la musica per categoria.</p>
+      </div>
+
+      <!-- Griglia categorie -->
+      <div id="categories-container" class="categories-grid">
+        <!-- Skeletons per le categorie -->
+        <div class="category-card skeleton"></div>
+        <div class="category-card skeleton"></div>
+        <div class="category-card skeleton"></div>
+        <div class="category-card skeleton"></div>
+        <div class="category-card skeleton"></div>
+        <div class="category-card skeleton"></div>
       </div>
     </section>
   </main>

@@ -16,15 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('track-name').textContent = "Errore nel caricamento";
                 return;
             }
-
-            document.getElementById('track-name').textContent = data.name;
-            document.getElementById('track-artist').textContent = data.artist;
+            document.getElementById('track-name').textContent = data.name;
+            if (data.artist_id) {
+                document.getElementById('track-artist').innerHTML = `<a href="artist-detail.html?id=${data.artist_id}" class="artist-link text-decoration-none" style="color: inherit;">${data.artist}</a>`;
+            } else {
+                document.getElementById('track-artist').textContent = data.artist;
+            }
             document.getElementById('track-album').textContent = data.album;
             
             const coverEl = document.getElementById('track-cover');
+            const bgBlurEl = document.getElementById('lyrics-bg-blur');
+            
             if (data.cover) {
                 coverEl.src = data.cover;
                 coverEl.style.display = 'block';
+                
+                // Imposta la copertina come sfondo sfocato!
+                if (bgBlurEl) {
+                    bgBlurEl.style.backgroundImage = `url(${data.cover})`;
+                }
             }
 
             const spotifyLink = document.getElementById('spotify-link');
