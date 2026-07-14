@@ -44,18 +44,35 @@ app.get('/api/search', async (req, res) => {
 
   try {
     const token = await getSpotifyToken();
-    const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist&limit=5`, {
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist,track&limit=3`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await response.json();
     
-    const risultati = data.artists.items.map(artist => ({
-      titolo: artist.name,
-      artista: artist.name,
-      copertina: artist.images.length > 0 ? artist.images[0].url : '',
-      id: artist.id,
-      type: 'artist'
-    }));
+    let risultati = [];
+    
+    // Aggiungi artisti
+    if (data.artists && data.artists.items) {
+      risultati = risultati.concat(data.artists.items.map(artist => ({
+        titolo: artist.name,
+        artista: 'Artista',
+        copertina: artist.images && artist.images.length > 0 ? artist.images[0].url : '',
+        id: artist.id,
+        type: 'artist'
+      })));
+    }
+    
+    // Aggiungi tracce
+    if (data.tracks && data.tracks.items) {
+      risultati = risultati.concat(data.tracks.items.map(track => ({
+        titolo: track.name,
+        artista: track.artists.map(a => a.name).join(', '),
+        copertina: track.album.images && track.album.images.length > 0 ? track.album.images[0].url : '',
+        id: track.id,
+        type: 'track'
+      })));
+    }
+    
     res.json(risultati);
   } catch (err) {
     console.error(err);
@@ -933,17 +950,31 @@ app.get('/api/spotify/track', async (req, res) => {
 
 app.get('/api/lyrics', async (req, res) => {
   const { artist, title } = req.query;
+  const cleanTitle = title.replace(/\s*\(.*?\)/g, '').replace(/\s*\[.*?\]/g, '').trim();
+
   try {
-    // 1. Pulizia del titolo per migliorare la ricerca su Genius (rimuove feat. e versioni tra parentesi)
-    const cleanTitle = title.replace(/\s*\(.*?\)/g, '').replace(/\s*\[.*?\]/g, '').trim();
-    
-    // Proviamo prima con il titolo originale, poi con il titolo pulito
+    // 1. Tenta LRCLIB per i testi sincronizzati
+    const lrclibRes = await fetch(`https://lrclib.net/api/get?artist_name=${encodeURIComponent(artist)}&track_name=${encodeURIComponent(cleanTitle)}`);
+    if (lrclibRes.ok) {
+        const lrcData = await lrclibRes.json();
+        if (lrcData.syncedLyrics) {
+            return res.json({ synced: true, lyrics: lrcData.syncedLyrics });
+        } else if (lrcData.plainLyrics) {
+            return res.json({ synced: false, lyrics: lrcData.plainLyrics });
+        }
+    }
+  } catch(e) {
+    console.error("LRCLIB error", e);
+  }
+
+  try {
+    // 2. Fallback su Genius se LRCLIB fallisce
     let queries = [`${title} ${artist}`, `${cleanTitle} ${artist}`];
     let hit = null;
 
     for (let q of queries) {
         const searchRes = await fetch(`https://api.genius.com/search?q=${encodeURIComponent(q)}`, {
-            headers: { 'Authorization': `Bearer ${process.env.GENIUS_TOKEN || 'T-2wzU3wTcwK8QYp0Pq9m0A88G41tB-1tU-B-l9D83G6C-fR8E0D71O-1Pz'}` } // Usato fallback fisso open se manca
+            headers: { 'Authorization': `Bearer ${process.env.GENIUS_TOKEN || 'T-2wzU3wTcwK8QYp0Pq9m0A88G41tB-1tU-B-l9D83G6C-fR8E0D71O-1Pz'}` }
         });
         const searchData = await searchRes.json();
         hit = searchData.response?.hits?.find(h => h.type === 'song');

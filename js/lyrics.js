@@ -157,22 +157,109 @@ function cercaTesto(artista, titolo) {
                         // Spazio vuoto
                         lyricsContainer.appendChild(document.createElement('br'));
                     }
+
+            } else {
+                audioWrapper.innerHTML = '<p class="text-white-50 mt-3">Anteprima audio non disponibile per questa traccia.</p>';
+                audioWrapper.style.display = 'block';
+            }
+
+            // Dopo aver recuperato i dettagli, cerchiamo il testo
+            cercaTesto(data.artist, data.name);
+        })
+        .catch(err => console.error(err));
+});
+
+function cleanTrackTitle(title) {
+    return title
+        .replace(/\s*\([^)]*(feat\.|ft\.|with|remastered|live|version|edit|remix|acoustic|radio)[^)]*\)/gi, '')
+        .replace(/\s*-\s*(remastered|live|version|edit|remix|acoustic|radio|feat\.|ft\.).*/gi, '')
+        .trim();
+}
+
+function cercaTesto(artista, titolo) {
+    const cleanTitolo = cleanTrackTitle(titolo);
+    const lyricsUrl = `/api/lyrics?artist=${encodeURIComponent(artista)}&title=${encodeURIComponent(cleanTitolo)}`;
+    
+    const fallbackHTML = `
+        <div style="text-align: center; padding: 40px 20px; opacity: 0.6; white-space: normal;">
+            <h4 style="font-weight: 500; margin-bottom: 10px; font-size: 1.3rem;">Il testo di questo brano non è ancora disponibile.</h4>
+            <p style="font-size: 0.95rem; margin: 0;">Stiamo lavorando per aggiungerlo al nostro database.</p>
+        </div>
+    `;
+    
+    fetch(lyricsUrl)
+        .then(res => res.json())
+        .then(data => {
+            const lyricsContainer = document.getElementById('lyrics-container');
+            if (data.lyrics) {
+                const isSynced = data.synced;
+                
+                let linesData = [];
+                if (isSynced) {
+                    const lrcLines = data.lyrics.split('\n');
+                    lrcLines.forEach(line => {
+                        const match = line.match(/^\[(\d+):(\d+\.\d+)\](.*)/) || line.match(/^\[(\d+):(\d+)\](.*)/);
+                        if (match) {
+                            const m = parseInt(match[1]);
+                            const s = parseFloat(match[2]);
+                            const timeInSeconds = (m * 60) + s;
+                            const text = match[3].trim();
+                            if(text) {
+                                linesData.push({ time: timeInSeconds, text: text });
+                            }
+                        }
+                    });
+                } else {
+                    const lines = data.lyrics.split('\n').map(l => l.trim());
+                    lines.forEach(line => {
+                        if (line) linesData.push({ time: null, text: line });
+                        else linesData.push({ time: null, text: '' });
+                    });
+                }
+                
+                lyricsContainer.innerHTML = '';
+                const spans = [];
+                
+                linesData.forEach((ld) => {
+                    if (ld.text) {
+                        const span = document.createElement('span');
+                        span.className = 'lyric-line';
+                        span.textContent = ld.text;
+                        if (ld.time !== null) span.dataset.time = ld.time;
+                        lyricsContainer.appendChild(span);
+                        spans.push(span);
+                    } else {
+                        lyricsContainer.appendChild(document.createElement('br'));
+                    }
                 });
 
-                // Sync audio (stima lineare basata sull'anteprima da 30s)
+                // Sync audio
                 const audioPlayer = document.getElementById('audio-player');
                 if (audioPlayer && spans.length > 0) {
                     audioPlayer.addEventListener('timeupdate', () => {
-                        if (!audioPlayer.duration || audioPlayer.paused) return;
+                        if (audioPlayer.paused) return;
+                        const currentTime = audioPlayer.currentTime;
                         
-                        const progress = audioPlayer.currentTime / audioPlayer.duration;
-                        const activeIndex = Math.floor(progress * spans.length);
+                        let activeIndex = -1;
+                        if (isSynced && spans[0].dataset.time) {
+                            for (let i = 0; i < spans.length; i++) {
+                                const t = parseFloat(spans[i].dataset.time);
+                                if (currentTime >= t) {
+                                    activeIndex = i;
+                                } else {
+                                    break;
+                                }
+                            }
+                        } else {
+                            if (!audioPlayer.duration) return;
+                            const progress = audioPlayer.currentTime / audioPlayer.duration;
+                            activeIndex = Math.floor(progress * spans.length);
+                        }
                         
                         spans.forEach((s, idx) => {
                             if (idx === activeIndex) {
                                 if (!s.classList.contains('active-line')) {
                                     s.classList.add('active-line');
-                                    // Scroll morbido per centrare la riga illuminata
                                     s.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 }
                             } else {

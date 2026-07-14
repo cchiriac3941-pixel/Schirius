@@ -27,8 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const coverEl = document.getElementById('album-cover');
             if (data.cover) {
+                coverEl.crossOrigin = "Anonymous";
                 coverEl.src = data.cover;
                 coverEl.style.display = 'block';
+                
+                if (typeof ColorThief !== 'undefined') {
+                    coverEl.addEventListener('load', function() {
+                        try {
+                            const colorThief = new ColorThief();
+                            const color = colorThief.getColor(coverEl);
+                            document.body.style.setProperty('--dynamic-glow', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
+                        } catch(e) { console.warn("ColorThief:", e); }
+                    });
+                }
             }
 
             const tracklistContainer = document.getElementById('tracklist-container');

@@ -1057,3 +1057,389 @@ html {
   text-decoration: underline !important;
   text-decoration-color: currentColor;
 }
+/* ============================================================
+   AUTOCOMPLETE DROPDOWN & NAVBAR SCROLLED STATE
+   ============================================================ */
+.ios-header {
+  transition: all 0.3s ease;
+}
+.ios-header.scrolled {
+  background: rgba(17, 17, 17, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  height: 54px;
+}
+:root[data-theme="light"] .ios-header.scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+  position: relative;
+}
+
+    color: var(--text-primary) !important;
+}
+:root[data-theme="light"] .text-white-50 {
+    color: var(--text-muted) !important;
+}
+:root[data-theme="light"] .border-white {
+    border-color: rgba(0,0,0,0.1) !important;
+}
+:root[data-theme="light"] .footer-brand {
+    background: linear-gradient(135deg, #000, #555) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+:root[data-theme="light"] .social-icon {
+    color: var(--text-primary);
+    border-color: rgba(0,0,0,0.2);
+}
+:root[data-theme="light"] .social-icon:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--accent);
+  background: var(--surface-soft);
+  border: 0.5px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text);
+  box-shadow: 0 4px 10px var(--shadow-color);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.6s ease, border-color 0.6s ease, color 0.6s ease;
+  margin-left: 1rem;
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.9);
+}
+
+.theme-toggle-btn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root[data-theme="light"] .theme-toggle-btn svg.sun-icon {
+  display: none;
+}
+:root:not([data-theme="light"]) .theme-toggle-btn svg.moon-icon {
+  display: none;
+}
+
+/* Old mobile-top-nav removed. Unified ios-header handles everything now. */
+
+/* ============================================================
+   LIQUID GLASS FEATURED CARD (Hover radial glow)
+   ============================================================ */
+.liquid-featured-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(30, 30, 30, 0.4);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+.liquid-featured-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 15px 40px rgba(176, 38, 255, 0.25);
+}
+
+:root[data-theme="light"] .liquid-featured-card {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="light"] .liquid-featured-card:hover {
+  box-shadow: 0 15px 40px rgba(176, 38, 255, 0.1);
+}
+
+.liquid-featured-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  padding: 2px; /* width of the glow border */
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(176, 38, 255, 0.4),
+    transparent 40%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.liquid-featured-card:hover::before {
+  opacity: 1;
+}
+
+:root[data-theme="light"] .liquid-featured-card::before {
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(176, 38, 255, 0.2),
+    transparent 40%
+  );
+}
+
+.liquid-featured-card:active {
+  transform: scale(0.96);
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR (Premium iOS Style)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+:root[data-theme="light"] html {
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Stili per link agli artisti cliccabili nelle pagine Album e Lyrics */
+.artist-link {
+  transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+  text-decoration-color: transparent;
+}
+
+.artist-link:hover {
+  opacity: 0.8;
+  text-decoration: underline !important;
+  text-decoration-color: currentColor;
+}
+/* ============================================================
+   AUTOCOMPLETE DROPDOWN & NAVBAR SCROLLED STATE
+   ============================================================ */
+.ios-header {
+  transition: all 0.3s ease;
+}
+.ios-header.scrolled {
+  background: rgba(17, 17, 17, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  height: 54px;
+}
+:root[data-theme="light"] .ios-header.scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+  position: relative;
+}
+
+    color: var(--text-primary) !important;
+}
+:root[data-theme="light"] .text-white-50 {
+    color: var(--text-muted) !important;
+}
+:root[data-theme="light"] .border-white {
+    border-color: rgba(0,0,0,0.1) !important;
+}
+:root[data-theme="light"] .footer-brand {
+    background: linear-gradient(135deg, #000, #555) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+:root[data-theme="light"] .social-icon {
+    color: var(--text-primary);
+    border-color: rgba(0,0,0,0.2);
+}
+:root[data-theme="light"] .social-icon:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--accent);
+}
+:root[data-theme="light"] .autocomplete-dropdown {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+:root[data-theme="light"] .autocomplete-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================
+   AUTOCOMPLETE DROPDOWN (BADASS STYLE)
+   ============================================================ */
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: 100%;
+  background: rgba(20, 20, 22, 0.65);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 2000;
+  display: none;
+  opacity: 0;
+  transform: translateY(-15px) scale(0.98);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.autocomplete-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.autocomplete-dropdown.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.autocomplete-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+.autocomplete-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.autocomplete-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+  transform-origin: center;
+}
+.autocomplete-item:hover::before {
+  transform: scaleY(1);
+}
+
+.autocomplete-item img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+.autocomplete-item:hover img {
+  transform: scale(1.05);
+}
+
+.autocomplete-item .info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.autocomplete-item .info strong {
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.autocomplete-item .info small {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.autocomplete-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 800;
+  margin-left: auto;
+}
+.badge-artist {
+  background: rgba(176, 38, 255, 0.2);
+  color: #d18aff;
+  border: 1px solid rgba(176, 38, 255, 0.3);
+}
+.badge-track {
+  background: rgba(0, 200, 255, 0.15);
+  color: #6fe4ff;
+  border: 1px solid rgba(0, 200, 255, 0.3);
+}
+
+/* ============================================================
+   DYNAMIC GLOW BACKGROUND (ColorThief)
+   ============================================================ */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 30%, var(--dynamic-glow, transparent) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.25;
+    transition: background 1s ease;
+}
+:root[data-theme="light"] body::before {
+    opacity: 0.1;
+}

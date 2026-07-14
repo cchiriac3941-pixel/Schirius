@@ -42,8 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const artistAvatarEl = document.getElementById('artist-avatar');
             if (artistAvatarEl && data.artistImage) {
+                artistAvatarEl.crossOrigin = "Anonymous";
                 artistAvatarEl.src = data.artistImage;
                 artistAvatarEl.style.display = 'block';
+                
+                if (typeof ColorThief !== 'undefined') {
+                    artistAvatarEl.addEventListener('load', function() {
+                        try {
+                            const colorThief = new ColorThief();
+                            const color = colorThief.getColor(artistAvatarEl);
+                            document.body.style.setProperty('--dynamic-glow', `rgb(${color[0]}, ${color[1]}, ${color[2]})`);
+                        } catch(e) { console.warn("ColorThief:", e); }
+                    });
+                }
             }
             
             const bioTesto = data.bio || "Nessuna biografia disponibile per questo artista.";

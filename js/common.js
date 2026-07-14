@@ -326,3 +326,105 @@ window.addEventListener('error', function(e) {
         e.target.src = "data:image/svg+xml;base64," + btoa(svg);
     }
 }, true);
+
+// ==========================================
+// NAVBAR SCROLL STATE & AUTOCOMPLETE
+// ==========================================
+window.addEventListener('DOMContentLoaded', () => {
+    // 1. Scrolled State per Navbar
+    const iosHeader = document.querySelector('.ios-header');
+    if (iosHeader) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                iosHeader.classList.add('scrolled');
+            } else {
+                iosHeader.classList.remove('scrolled');
+            }
+        });
+    }
+
+    // 2. Autocomplete Live Search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        // Crea il container del dropdown
+        const dropdown = document.createElement('div');
+        dropdown.className = 'autocomplete-dropdown';
+        
+        // Inseriscilo sotto all'input
+        searchInput.parentNode.style.position = 'relative';
+        searchInput.parentNode.appendChild(dropdown);
+
+        let debounceTimer;
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            
+            clearTimeout(debounceTimer);
+            
+            if (query.length < 2) {
+                dropdown.classList.remove('show');
+                return;
+            }
+
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+                    if (res.ok) {
+                        const risultati = await res.json();
+                        
+                        if (risultati.length === 0) {
+                            dropdown.innerHTML = '<div class="p-3 text-muted">Nessun risultato trovato.</div>';
+                        } else {
+                            dropdown.innerHTML = risultati.map(item => {
+                                const url = item.type === 'artist' ? `/pages/artist.html?id=${item.id}` : `/pages/album-detail.html?id=${item.id}`;
+                                const badgeClass = item.type === 'artist' ? 'badge-artist' : 'badge-track';
+                                const badgeText = item.type === 'artist' ? 'Artista' : 'Brano';
+                                
+                                return `
+                                    <a href="${url}" class="autocomplete-item">
+                                        <img src="${item.copertina || 'https://via.placeholder.com/48'}" alt="${item.titolo}">
+                                        <div class="info">
+                                            <strong>${item.titolo}</strong>
+                                            <small>${item.artista}</small>
+                                        </div>
+                                        <span class="autocomplete-badge ${badgeClass}">${badgeText}</span>
+                                    </a>
+                                `;
+                            }).join('');
+                        }
+                        dropdown.classList.add('show');
+                    }
+                } catch (err) {
+                    console.error("Errore autocomplete:", err);
+                }
+            }, 300); // 300ms debounce
+        });
+
+        // Chiudi il dropdown se clicchi fuori
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        // Riapri il dropdown se clicchi sull'input e c'è del testo
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.value.trim().length >= 2 && dropdown.innerHTML !== '') {
+                dropdown.classList.add('show');
+            }
+        });
+    }
+});
+
+// ==========================================
+// PWA SERVICE WORKER REGISTRATION
+// ==========================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      console.log('SW registered: ', registration);
+    }).catch(registrationError => {
+      console.log('SW registration failed: ', registrationError);
+    });
+  });
+}
