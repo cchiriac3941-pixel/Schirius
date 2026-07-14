@@ -24,13 +24,13 @@ function renderNewReleases(albums) {
     container.innerHTML = '';
     
     if (albums.length === 0) {
-        container.innerHTML = '<p class="text-muted">Nessuna nuova uscita disponibile.</p>';
+        container.innerHTML = '<p class="text-white-50 ms-3">Nessun brano consigliato al momento.</p>';
         return;
     }
     
     albums.forEach(album => {
         const coverUrl = album.cover || 'https://via.placeholder.com/300?text=No+Cover';
-        const link = `album-detail.html?id=${album.id}`;
+        const link = `lyrics.html?id=${album.id}`;
         
         const html = `
             <a href="${link}" class="release-card new-release-card text-decoration-none">

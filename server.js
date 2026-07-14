@@ -1054,8 +1054,8 @@ app.get('/api/discover-content', async (req, res) => {
             ];
         }
 
-        // 2. Fetch New Releases ONLY FOR SUPPORTED ARTISTS
-        let newReleases = [];
+        // 2. Fetch Suggested Tracks (invece di New Releases) SOLO PER SUPPORTED ARTISTS
+        let suggestedTracks = [];
         try {
             const SUPPORTED_ARTISTS = [
                 "Lazza", "Sfera Ebbasta", "Shiva", "Capo Plaza", "Artie 5ive", "Kid Yugi", 
@@ -1064,48 +1064,58 @@ app.get('/api/discover-content', async (req, res) => {
                 "Lil Baby", "Geolier", "Tedua", "Guè", "Marracash", "thasup"
             ];
 
-            // Peschiamo 10 artisti casuali dai nostri supportati per evitare il rate limit
+            // Peschiamo 10 artisti casuali dai nostri supportati
             const shuffled = [...SUPPORTED_ARTISTS].sort(() => 0.5 - Math.random()).slice(0, 10);
             
             for (const artistName of shuffled) {
-                // Troviamo l'ID dell'artista
-                const searchRes = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artistName)}&type=artist&limit=1`, {
+                // Delay per evitare il rate-limit (429) di Spotify
+                await new Promise(resolve => setTimeout(resolve, 200));
+
+                const topTracksRes = await fetch(`https://api.spotify.com/v1/search?q=artist:${encodeURIComponent(artistName)}&type=track&limit=5`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
-                if (searchRes.ok) {
-                    const searchData = await searchRes.json();
-                    if (searchData.artists && searchData.artists.items.length > 0) {
-                        const artist = searchData.artists.items[0];
-                        
-                        // Otteniamo l'ultima release
-                        const albumsRes = await fetch(`https://api.spotify.com/v1/artists/${artist.id}/albums?include_groups=album,single&limit=1`, {
-                            headers: { 'Authorization': `Bearer ${token}` }
+                if (topTracksRes.ok) {
+                    const tracksData = await topTracksRes.json();
+                    if (tracksData.tracks && tracksData.tracks.items && tracksData.tracks.items.length > 0) {
+                        const randomTrack = tracksData.tracks.items[Math.floor(Math.random() * tracksData.tracks.items.length)];
+                        suggestedTracks.push({
+                            id: randomTrack.id,
+                            name: randomTrack.name,
+                            artist: randomTrack.artists.map(a => a.name).join(', '),
+                            cover: randomTrack.album && randomTrack.album.images && randomTrack.album.images.length > 0 ? randomTrack.album.images[0].url : ''
                         });
-                        
-                        if (albumsRes.ok) {
-                            const albumsData = await albumsRes.json();
-                            if (albumsData.items && albumsData.items.length > 0) {
-                                const latest = albumsData.items[0];
-                                newReleases.push({
-                                    id: latest.id,
-                                    name: latest.name,
-                                    artist: latest.artists.map(a => a.name).join(', '),
-                                    cover: latest.images && latest.images.length > 0 ? latest.images[0].url : '',
-                                    release_date: latest.release_date
-                                });
-                            }
-                        }
                     }
                 }
             }
             
-            // Ordiniamo per data decrescente così abbiamo davvero le "nuove" uscite
-            newReleases.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+            suggestedTracks = suggestedTracks.sort(() => 0.5 - Math.random());
             
-        } catch (e) { console.error("Errore fetch new releases:", e); }
+        } catch (e) { console.error("Errore fetch suggested tracks:", e); }
 
-        res.json({ categories, newReleases });
+        // Fallback robusto via iTunes RSS se Spotify ha bloccato tutte le richieste (Rate Limit / Token invalido)
+        if (suggestedTracks.length === 0) {
+            try {
+                const itunesRes = await fetch('https://itunes.apple.com/it/rss/topsongs/limit=15/json');
+                if (itunesRes.ok) {
+                    const itunesData = await itunesRes.json();
+                    if (itunesData.feed && itunesData.feed.entry) {
+                        suggestedTracks = itunesData.feed.entry.map(entry => {
+                            const idMatch = entry.id.attributes ? entry.id.attributes['im:id'] : null;
+                            const coverArr = entry['im:image'];
+                            return {
+                                id: idMatch || entry.id.label,
+                                name: entry['im:name'].label,
+                                artist: entry['im:artist'].label,
+                                cover: coverArr && coverArr.length > 0 ? coverArr[coverArr.length - 1].label : ''
+                            };
+                        });
+                    }
+                }
+            } catch (e) { console.error("Errore iTunes fallback tracks:", e); }
+        }
+
+        res.json({ categories, newReleases: suggestedTracks });
     } catch (err) {
         console.error("Errore endpoint discover:", err);
         res.status(500).json({ error: 'Impossibile caricare i dati discovery' });
