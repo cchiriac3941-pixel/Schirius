@@ -1,106 +1,257 @@
 /* ============================================================
-   DISCOVER PAGE STYLES (iOS 26 / Apple Music Vibe)
+   SCHIRIUS - DISCOVER PAGE REDESIGN
+   Stile Premium iOS 26 / Magazine Layout
    ============================================================ */
 
-/* --- GRIGLIA DELLE CATEGORIE (GENERI) --- */
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1.25rem;
-    margin-top: 1.5rem;
+/* --- SPOTLIGHT HERO CARD --- */
+.spotlight-container {
+    margin-bottom: 3rem;
 }
 
-.category-card {
-    position: relative;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    aspect-ratio: 1; /* Quadrato perfetto */
-    text-decoration: none;
+.spotlight-card {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    flex-direction: column;
+    background: rgba(30, 30, 32, 0.4);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.category-card img {
-    position: absolute;
-    top: 0;
-    left: 0;
+.spotlight-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 30px 60px rgba(176, 38, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.spotlight-image-wrapper {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    position: relative;
+}
+
+.spotlight-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 1;
-    transition: transform 0.5s ease;
-    filter: brightness(0.6) saturate(1.2);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.category-card:hover img {
-    transform: scale(1.1);
-    filter: brightness(0.7) saturate(1.4);
+.spotlight-card:hover .spotlight-img {
+    transform: scale(1.05);
 }
 
-.category-card h3 {
+.spotlight-image-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 15, 17, 0.9) 0%, rgba(15, 15, 17, 0) 60%);
+}
+
+.spotlight-badge {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: linear-gradient(135deg, rgba(176, 38, 255, 0.8) 0%, rgba(114, 9, 183, 0.8) 100%);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(176, 38, 255, 0.4);
+    z-index: 2;
+    backdrop-filter: blur(10px);
+}
+
+.spotlight-info {
+    padding: 2rem;
     position: relative;
     z-index: 2;
+    margin-top: -4rem; /* Sovrappone il testo all'immagine */
+}
+
+.spotlight-title {
+    font-size: 2.5rem;
+    font-weight: 800;
     color: #ffffff;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.spotlight-artist {
     font-size: 1.2rem;
-    font-weight: 700;
-    text-align: center;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* --- SUGGESTED GRID (MASONRY-LIKE) --- */
+.suggested-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.suggested-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.02);
     padding: 1rem;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+}
+
+.suggested-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.suggested-cover {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    margin-bottom: 1rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.suggested-title {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.3rem 0;
+    line-height: 1.3;
+}
+
+.suggested-artist {
+    color: var(--text-muted);
+    font-size: 0.9rem;
     margin: 0;
 }
 
-.category-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 15px 35px rgba(176, 38, 255, 0.2);
+/* --- NEON CATEGORIES (OPTION B) --- */
+.categories-neon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.2rem;
 }
 
-/* --- SCROLL ORIZZONTALE (NUOVE USCITE) --- */
-.horizontal-scroll-container {
+.neon-category {
+    position: relative;
+    padding: 1.5rem;
+    border-radius: 20px;
+    text-decoration: none;
     display: flex;
-    gap: 1.25rem;
-    overflow-x: auto;
-    padding-bottom: 2rem;
-    padding-top: 1rem;
-    /* Nascondi la scrollbar ma mantieni lo scroll */
-    scrollbar-width: none; 
-    -ms-overflow-style: none;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: 1rem;
+    align-items: flex-end;
+    justify-content: flex-start;
+    height: 120px;
+    overflow: hidden;
+    background: #111;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.horizontal-scroll-container::-webkit-scrollbar {
-    display: none;
+.neon-category::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, var(--neon-color, rgba(176, 38, 255, 0.8)) 0%, transparent 60%);
+    opacity: 0.15;
+    transition: opacity 0.4s ease, transform 0.6s ease;
+    z-index: 1;
 }
 
-.new-release-card {
-    flex: 0 0 auto;
-    width: 180px; /* Larghezza fissa per lo slider */
-    scroll-snap-align: start;
+.neon-category:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 35px var(--neon-glow, rgba(176, 38, 255, 0.15));
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Sovrascrivi il padding della release card per lo slider */
-.new-release-card .card-body {
-    padding: 0.5rem 0 0 0;
+.neon-category:hover::before {
+    opacity: 0.4;
+    transform: scale(1.2);
 }
 
-.new-release-card h3 {
-    font-size: 0.95rem;
-    margin-bottom: 0.2rem;
+.neon-category h3 {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    letter-spacing: -0.5px;
 }
 
-.new-release-card p {
-    font-size: 0.8rem;
+/* Abstract shapes for categories */
+.neon-shape {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--neon-color, rgba(176, 38, 255, 0.5));
+    filter: blur(20px);
+    opacity: 0.5;
+    z-index: 1;
+    transition: transform 0.5s ease;
 }
 
+.neon-category:hover .neon-shape {
+    transform: scale(1.5) translate(-10px, 10px);
+    opacity: 0.8;
+}
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
-    .categories-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 colonne su mobile */
+    .spotlight-title {
+        font-size: 1.8rem;
+    }
+    
+    .spotlight-info {
+        padding: 1.5rem;
+        margin-top: -3rem;
+    }
+    
+    .spotlight-image-wrapper {
+        aspect-ratio: 1; /* Quadrato su mobile */
+    }
+    
+    .suggested-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
-    .new-release-card {
-        width: 140px;
+    
+    .categories-neon-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .neon-category {
+        height: 100px;
+        padding: 1rem;
+    }
+    
+    .neon-category h3 {
+        font-size: 1.1rem;
     }
 }

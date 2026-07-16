@@ -42,54 +42,70 @@
   <main class="main-content pt-5">
     <section class="container py-5 text-white">
       <div class="section-header text-center mb-5">
-        <span class="eyebrow text-white-50">I Tuoi Artisti</span>
-        <h1 class="text-white">Brani Consigliati</h1>
-        <p class="text-white-50 mx-auto">Le migliori canzoni degli artisti che ami.</p>
+        <span class="eyebrow text-white-50" style="letter-spacing: 2px;">Per Te</span>
+        <h1 class="display-4 fw-bold text-white mb-3" style="letter-spacing: -1px;">Scelto per te</h1>
       </div>
 
-      <!-- Scroll orizzontale Nuove Uscite -->
-      <div id="new-releases-container" class="horizontal-scroll-container">
-        <!-- Skeletons per le nuove uscite -->
-        <a href="#" class="release-card new-release-card skeleton">
-          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 0.5rem; border-radius: 12px;"></div>
-          <div class="card-body">
-            <div class="skeleton skeleton-text" style="width: 80%;"></div>
-            <div class="skeleton skeleton-text" style="width: 50%;"></div>
+      <!-- SPOTLIGHT CONTAINER -->
+      <div id="spotlight-container" class="spotlight-container">
+        <!-- Skeleton per Spotlight -->
+        <div class="spotlight-card skeleton">
+          <div class="spotlight-image-wrapper">
+            <div class="skeleton-img" style="aspect-ratio: 16/9;"></div>
           </div>
-        </a>
-        <a href="#" class="release-card new-release-card skeleton">
-          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 0.5rem; border-radius: 12px;"></div>
-          <div class="card-body">
-            <div class="skeleton skeleton-text" style="width: 80%;"></div>
-            <div class="skeleton skeleton-text" style="width: 50%;"></div>
+          <div class="spotlight-info">
+            <div class="skeleton skeleton-text" style="width: 50%; height: 2rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 30%;"></div>
           </div>
-        </a>
-        <a href="#" class="release-card new-release-card skeleton">
-          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 0.5rem; border-radius: 12px;"></div>
-          <div class="card-body">
-            <div class="skeleton skeleton-text" style="width: 80%;"></div>
-            <div class="skeleton skeleton-text" style="width: 50%;"></div>
-          </div>
-        </a>
+        </div>
+      </div>
+
+      <!-- SUGGESTED GRID (Dal Tuo Universo) -->
+      <div class="section-header text-start mt-5 mb-4">
+        <h2 class="h3 fw-bold text-white mb-1">Dal tuo Universo</h2>
+        <p class="text-white-50">I migliori brani dei tuoi artisti preferiti.</p>
+      </div>
+      
+      <div id="suggested-container" class="suggested-grid">
+        <!-- Skeleton per Suggested -->
+        <div class="suggested-card skeleton">
+          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 1rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%;"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+        </div>
+        <div class="suggested-card skeleton">
+          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 1rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%;"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+        </div>
+        <div class="suggested-card skeleton">
+          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 1rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%;"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+        </div>
+        <div class="suggested-card skeleton">
+          <div class="skeleton-img" style="aspect-ratio: 1; margin-bottom: 1rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%;"></div>
+          <div class="skeleton skeleton-text" style="width: 60%;"></div>
+        </div>
       </div>
     </section>
 
-    <section class="container py-5 text-white mt-4">
-      <div class="section-header text-center mb-4">
-        <span class="eyebrow text-white-50">Esplora</span>
-        <h2 class="text-white fw-bold">Generi e Mood</h2>
-        <p class="text-white-50 mx-auto">Sfoglia tutta la musica per categoria.</p>
+    <!-- NEON CATEGORIES -->
+    <section class="container pb-5 text-white">
+      <div class="section-header text-start mb-4">
+        <h2 class="h3 fw-bold text-white mb-1">Generi e Vibes</h2>
+        <p class="text-white-50">Esplora nuovi mood.</p>
       </div>
 
-      <!-- Griglia categorie -->
-      <div id="categories-container" class="categories-grid">
-        <!-- Skeletons per le categorie -->
-        <div class="category-card skeleton"></div>
-        <div class="category-card skeleton"></div>
-        <div class="category-card skeleton"></div>
-        <div class="category-card skeleton"></div>
-        <div class="category-card skeleton"></div>
-        <div class="category-card skeleton"></div>
+      <div id="categories-container" class="categories-neon-grid">
+        <!-- Skeleton per Categorie -->
+        <div class="neon-category skeleton"></div>
+        <div class="neon-category skeleton"></div>
+        <div class="neon-category skeleton"></div>
+        <div class="neon-category skeleton"></div>
+        <div class="neon-category skeleton"></div>
+        <div class="neon-category skeleton"></div>
       </div>
     </section>
   </main>

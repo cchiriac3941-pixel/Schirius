@@ -43,3 +43,31 @@
     0 8px 30px rgba(176, 38, 255, 0.25), 
     0 0 40px rgba(255, 255, 255, 0.8);
 }
+
+/* --- Hero Card Layout & Animations --- */
+
+.stagger-enter {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUpFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes slideUpFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-img-wrapper {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    height: 250px;
+  }
+  .hero-img-wrapper img {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom-left-radius: 0 !important;
+  }
+}

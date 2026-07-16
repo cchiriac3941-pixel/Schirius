@@ -1085,18 +1085,19 @@ app.get('/api/discover-content', async (req, res) => {
             ];
         }
 
-        // 2. Fetch Suggested Tracks (invece di New Releases) SOLO PER SUPPORTED ARTISTS
+        // 2. Fetch Suggested Tracks (invece di New Releases) SOLO PER I TUOI ARTISTI
         let suggestedTracks = [];
+        let spotlight = null;
         try {
             const SUPPORTED_ARTISTS = [
                 "Lazza", "Sfera Ebbasta", "Shiva", "Capo Plaza", "Artie 5ive", "Kid Yugi", 
                 "Tony Boy", "Ghali", "Travis Scott", "Playboi Carti", "Drake", "Future", 
                 "Young Thug", "Metro Boomin", "Salmo", "Niky Savage", "Lil Cr", "Diss Gacha", 
-                "Lil Baby", "Geolier", "Tedua", "Guè", "Marracash", "thasup"
+                "Lil Baby", "Paky", "Baby Gang", "Tedua", "Tony Effe"
             ];
 
-            // Peschiamo 10 artisti casuali dai nostri supportati
-            const shuffled = [...SUPPORTED_ARTISTS].sort(() => 0.5 - Math.random()).slice(0, 10);
+            // Peschiamo 15 artisti casuali dai supportati per dare varietà
+            const shuffled = [...SUPPORTED_ARTISTS].sort(() => 0.5 - Math.random()).slice(0, 15);
             
             for (const artistName of shuffled) {
                 // Delay per evitare il rate-limit (429) di Spotify
@@ -1122,31 +1123,37 @@ app.get('/api/discover-content', async (req, res) => {
             
             suggestedTracks = suggestedTracks.sort(() => 0.5 - Math.random());
             
+            if (suggestedTracks.length > 0) {
+                spotlight = suggestedTracks.shift(); // Il primo elemento diventa lo spotlight
+            }
+            
         } catch (e) { console.error("Errore fetch suggested tracks:", e); }
 
         // Fallback robusto via iTunes RSS se Spotify ha bloccato tutte le richieste (Rate Limit / Token invalido)
-        if (suggestedTracks.length === 0) {
+        if (suggestedTracks.length === 0 && !spotlight) {
             try {
                 const itunesRes = await fetch('https://itunes.apple.com/it/rss/topsongs/limit=15/json');
                 if (itunesRes.ok) {
                     const itunesData = await itunesRes.json();
                     if (itunesData.feed && itunesData.feed.entry) {
-                        suggestedTracks = itunesData.feed.entry.map(entry => {
+                        const tracks = itunesData.feed.entry.map(entry => {
                             const idMatch = entry.id.attributes ? entry.id.attributes['im:id'] : null;
                             const coverArr = entry['im:image'];
                             return {
                                 id: idMatch || entry.id.label,
                                 name: entry['im:name'].label,
                                 artist: entry['im:artist'].label,
-                                cover: coverArr && coverArr.length > 0 ? coverArr[coverArr.length - 1].label : ''
+                                cover: coverArr && coverArr.length > 0 ? coverArr[coverArr.length - 1].label.replace('55x55', '600x600') : ''
                             };
                         });
+                        spotlight = tracks.shift();
+                        suggestedTracks = tracks;
                     }
                 }
             } catch (e) { console.error("Errore iTunes fallback tracks:", e); }
         }
 
-        res.json({ categories, newReleases: suggestedTracks });
+        res.json({ categories, spotlight, suggestedTracks });
     } catch (err) {
         console.error("Errore endpoint discover:", err);
         res.status(500).json({ error: 'Impossibile caricare i dati discovery' });

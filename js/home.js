@@ -45,13 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const heroItem = recommendations[0];
             heroContainer.innerHTML = `
                 <h2 class="h4 mb-4 fw-bold">Album Consigliato</h2>
-                <a href="pages/album-detail.html?id=${heroItem.id}&name=${encodeURIComponent(heroItem.title)}" class="text-decoration-none">
-                    <div class="liquid-featured-card p-0 overflow-hidden d-flex flex-column flex-md-row text-center text-md-start" style="min-height: 300px;">
-                        <img src="${heroItem.cover}" alt="${heroItem.title}" class="img-fluid" style="width: 100%; max-width: 350px; object-fit: cover;">
-                        <div class="p-4 p-md-5 d-flex flex-column justify-content-center w-100">
-                            <span class="badge rounded-pill bg-accent bg-opacity-75 text-white align-self-center align-self-md-start mb-3 px-3 py-2">In Evidenza</span>
-                            <h3 class="display-5 fw-bold text-white mb-2">${heroItem.title}</h3>
-                            <p class="fs-5 text-white-50 mb-0">${heroItem.artist}</p>
+                <a href="pages/album-detail.html?id=${heroItem.id}&name=${encodeURIComponent(heroItem.title)}" class="text-decoration-none stagger-enter" style="animation-delay: 0.1s;">
+                    <div class="liquid-featured-card p-0 overflow-hidden d-flex flex-column flex-md-row text-center text-md-start" style="min-height: 350px;">
+                        <div class="hero-img-wrapper" style="flex: 0 0 45%; max-width: 400px;">
+                            <img src="${heroItem.cover}" alt="${heroItem.title}" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: inherit; border-bottom-left-radius: inherit;">
+                        </div>
+                        <div class="p-4 p-md-5 d-flex flex-column justify-content-center flex-grow-1">
+                            <span class="badge rounded-pill bg-accent bg-opacity-75 text-white align-self-center align-self-md-start mb-4 px-3 py-2" style="font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;">In Evidenza</span>
+                            <h3 class="display-4 fw-bold text-white mb-3" style="letter-spacing: -1px;">${heroItem.title}</h3>
+                            <p class="fs-4 text-white-50 mb-0">${heroItem.artist}</p>
                         </div>
                     </div>
                 </a>
@@ -66,21 +68,17 @@ document.addEventListener('DOMContentLoaded', () => {
             let recommendedSingles = recommendations.slice(1);
 
             if (recommendedSingles.length > 0) {
-                recommendedSingles.forEach(single => {
+                recommendedSingles.forEach((single, index) => {
                     const col = document.createElement('div');
                     col.className = 'col-6 col-md-3 mb-4';
-                    // Indirizza alla pagina album-detail dato che l'API ora restituisce l'id dell'album/singolo
                     col.innerHTML = `
-                        <a href="pages/album-detail.html?id=${single.id}&name=${encodeURIComponent(single.title)}" class="liquid-featured-card release-card h-100 recommendation-card d-block text-decoration-none">
+                        <a href="pages/album-detail.html?id=${single.id}&name=${encodeURIComponent(single.title)}" class="liquid-featured-card release-card h-100 recommendation-card d-block text-decoration-none stagger-enter" style="animation-delay: ${0.2 + (index * 0.1)}s;">
                             <div class="position-relative">
-                                <img src="${single.cover}" alt="${single.title}" loading="lazy">
-                                <div class="play-overlay">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                                </div>
+                                <img src="${single.cover}" alt="${single.title}" loading="lazy" style="border-radius: 12px; margin-bottom: 12px;">
                             </div>
-                            <div class="p-3">
-                                <h4 title="${single.title}" class="mb-1">${single.title}</h4>
-                                <p title="${single.artist}" class="mb-0 text-white-50">${single.artist}</p>
+                            <div class="p-2">
+                                <h4 title="${single.title}" class="mb-1" style="font-size: 1.1rem; font-weight: 600;">${single.title}</h4>
+                                <p title="${single.artist}" class="mb-0 text-white-50" style="font-size: 0.9rem;">${single.artist}</p>
                             </div>
                         </a>
                     `;

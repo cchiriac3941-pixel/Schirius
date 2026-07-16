@@ -1326,6 +1326,15 @@ html {
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.autocomplete-dropdown.mobile-autocomplete {
+  top: auto;
+  bottom: calc(100% + 12px);
+  transform: translateY(15px) scale(0.98);
+  width: 90vw;
+  left: 50%;
+  margin-left: -45vw;
+}
+
 .autocomplete-dropdown::-webkit-scrollbar {
   width: 6px;
 }

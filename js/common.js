@@ -344,21 +344,20 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Autocomplete Live Search
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        // Crea il container del dropdown
+    function attachAutocomplete(inputId, isMobile) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+
         const dropdown = document.createElement('div');
-        dropdown.className = 'autocomplete-dropdown';
+        dropdown.className = 'autocomplete-dropdown' + (isMobile ? ' mobile-autocomplete' : '');
         
-        // Inseriscilo sotto all'input
-        searchInput.parentNode.style.position = 'relative';
-        searchInput.parentNode.appendChild(dropdown);
+        input.parentNode.style.position = 'relative';
+        input.parentNode.appendChild(dropdown);
 
         let debounceTimer;
 
-        searchInput.addEventListener('input', (e) => {
+        input.addEventListener('input', (e) => {
             const query = e.target.value.trim();
-            
             clearTimeout(debounceTimer);
             
             if (query.length < 2) {
@@ -372,11 +371,17 @@ window.addEventListener('DOMContentLoaded', () => {
                     if (res.ok) {
                         const risultati = await res.json();
                         
+                        // Trova il percorso relativo alla radice del progetto per i link
+                        let prefix = '';
+                        if (window.location.href.includes('/artists/performer/')) prefix = '../../';
+                        else if (window.location.href.includes('/artists/')) prefix = '../';
+                        else if (window.location.href.includes('/pages/')) prefix = '../../';
+
                         if (risultati.length === 0) {
-                            dropdown.innerHTML = '<div class="p-3 text-muted">Nessun risultato trovato.</div>';
+                            dropdown.innerHTML = '<div class="p-3 text-muted text-center">Nessun risultato trovato.</div>';
                         } else {
                             dropdown.innerHTML = risultati.map(item => {
-                                const url = item.type === 'artist' ? `/pages/artist.html?id=${item.id}` : `/pages/album-detail.html?id=${item.id}`;
+                                const url = prefix + (item.type === 'artist' ? `pages/artist-detail.html?id=${item.id}&name=${encodeURIComponent(item.titolo)}` : `pages/album-detail.html?id=${item.id}&name=${encodeURIComponent(item.titolo)}`);
                                 const badgeClass = item.type === 'artist' ? 'badge-artist' : 'badge-track';
                                 const badgeText = item.type === 'artist' ? 'Artista' : 'Brano';
                                 
@@ -397,23 +402,30 @@ window.addEventListener('DOMContentLoaded', () => {
                 } catch (err) {
                     console.error("Errore autocomplete:", err);
                 }
-            }, 300); // 300ms debounce
+            }, 300);
         });
 
-        // Chiudi il dropdown se clicchi fuori
         document.addEventListener('click', (e) => {
-            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.remove('show');
             }
         });
         
-        // Riapri il dropdown se clicchi sull'input e c'è del testo
-        searchInput.addEventListener('focus', () => {
-            if (searchInput.value.trim().length >= 2 && dropdown.innerHTML !== '') {
+        input.addEventListener('focus', () => {
+            if (input.value.trim().length >= 2 && dropdown.innerHTML !== '') {
                 dropdown.classList.add('show');
             }
         });
     }
+
+    attachAutocomplete('searchInput', false);
+    // Nota: l'input mobile potrebbe essere iniettato dinamicamente, usiamo un MutationObserver o un controllo successivo
+    const checkMobileInput = setInterval(() => {
+        if (document.getElementById('mobileSearchInput')) {
+            attachAutocomplete('mobileSearchInput', true);
+            clearInterval(checkMobileInput);
+        }
+    }, 500);
 });
 
 // ==========================================
